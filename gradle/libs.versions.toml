@@ -1,0 +1,64 @@
+[versions]
+ktx = "1.10.1"
+lifecycle-runtime-ktx = "2.6.1"
+activity-compose = "1.7.2"
+compose-bom = "2022.10.00"
+junit = "4.13.2"
+espresso-core = "3.5.1"
+hilt-android = "2.47"
+hilt-compiler = "2.47"
+hilt-android-annotation = "2.47"
+coil = "2.6.0"
+ktor-client-core = "1.6.4"
+ktor-client-android = "1.6.4"
+ktor-client-serialization = "1.6.4"
+ktor-client-logging = "1.6.4"
+kotlinx-serialization-json = "1.3.0"
+material3-design = "1.3.0-alpha02"
+material-icons-extended = "1.6.3"
+navigation-compose = "2.7.7"
+hilt-navigation-compose = "1.2.0"
+kapt-hilt-annotation-processor = "2.6.1"
+accompanist-pager = "0.32.0"
+accompanist-pager-indicators = "0.32.0"
+leakcanary-android = "2.12"
+tooling-preview-android  = "1.6.3"
+
+[libraries]
+androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
+lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
+activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+hilt_compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt-compiler" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt-android" }
+kapt = { group = "androidx.room", name = "room-compiler", version.ref = "kapt-hilt-annotation-processor" }
+hilt-android-annotation = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt-android-annotation" }
+coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor-client-core" }
+ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor-client-android" }
+ktor-client-serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktor_client-serialization" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor-client-logging" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "material-icons-extended" }
+material3-design = { group = "androidx.compose.material3", name = "material3", version.ref = "material3-design" }
+navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt_navigation-compose" }
+accompanist-pager = { group = "com.google.accompanist", name = "accompanist-pager", version.ref = "accompanist-pager" }
+accompanist-pager-indicators = { group = "com.google.accompanist", name = "accompanist-pager-indicators", version.ref = "accompanist-pager-indicators" }
+leakcanary-android = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakcanary-android" }
+tooling = {group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "tooling-preview-android" }
+
+
+#[plugins]
+#com.android.application = "8.0.1"
+#com.android.library = "8.0.1"
+#org.jetbrains.kotlin.android = "1.7.20"
+#com.google.dagger.hilt.android = "2.47"
+#org.jetbrains.kotlin.jvm = "1.5.31"
+#org.jlleitschuh.gradle.ktlint = "7.1.0"
+#
+#[bundles]
+#kotlinx-serialization = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version = "1.9.10" }
+#ktlint = { group = "org.jlleitschuh.gradle", name = "ktlint-gradle", version = "11.6.1" }
