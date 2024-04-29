@@ -4,4 +4,7 @@ package com.example.bookbites.model.bid.sentBids
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-class SentBid : ArrayList<SentBidItem>()
+@Serializable
+data class SentBid(
+    val sentBids: List<SentBidItem>
+)
