@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.sp
 import com.example.bookbites.R
 
 @Composable
-fun Register(){
+fun Register() {
     var email by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -94,9 +94,9 @@ fun Register(){
             Spacer(modifier = Modifier.height(10.dp))
 
             OutlinedTextField(
-                value = email,
+                value = username,
                 onValueChange = {
-                    email = it
+                    username = it
                 },
                 label = { Text("Username") }
             )
