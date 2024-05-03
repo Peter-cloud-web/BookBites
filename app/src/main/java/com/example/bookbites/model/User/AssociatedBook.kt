@@ -1,5 +1,8 @@
 package com.example.bookbites.model.User
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class AssociatedBook(
     val author: String,
     val category: String,
