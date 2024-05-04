@@ -30,11 +30,11 @@ class BookBitesKtorClient {
                 }
             }
 
-
             install(ResponseObserver) {
                 onResponse { response ->
                     Log.i(TAG_HTTP_STATUS_LOGGER, "${response.status.value}")
                 }
+
             }
 
         }

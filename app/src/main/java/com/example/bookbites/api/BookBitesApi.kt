@@ -1,5 +1,6 @@
 package com.example.bookbites.api
 
+import android.util.Log
 import coil.network.HttpException
 import com.example.bookbites.model.authentication.AuthResponse
 import com.example.bookbites.model.authentication.Login
@@ -48,7 +49,7 @@ class BookBitesApi @Inject constructor(val httpClient: HttpClient) {
         userEmail: String,
         userName: String,
         userPassword: String
-    ): Resource<AuthResponse> {
+    ): Resource<String> {
         return try {
             Resource.Loading(null)
             val authResponse = httpClient.post<AuthResponse>() {
@@ -58,9 +59,18 @@ class BookBitesApi @Inject constructor(val httpClient: HttpClient) {
                     encodedPath = Constants.REGISTER
                 }
                 contentType(ContentType.Application.Json)
-                body = Register(userEmail, userName, userPassword)
+                body = Register(userEmail = userEmail, userName = userName, userPassword = userPassword)
             }
-            Resource.Success(authResponse)
+
+            if(authResponse.success){
+                val token = authResponse.message
+                Log.d("Token","${token.toString()}")
+                Resource.Success(token)
+            } else{
+                Resource.Error(null,"Registration failed:${authResponse.message}")
+
+            }
+
         } catch (e: Exception) {
             Resource.Error(null, e.localizedMessage ?: "An unexpected error occurred")
         } catch (e: IOException) {

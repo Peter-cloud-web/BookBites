@@ -1,6 +1,7 @@
 package com.example.bookbites.repository
 
 import android.provider.ContactsContract.CommonDataKinds.Email
+import android.util.Log
 import com.example.bookbites.api.BookBitesApi
 import com.example.bookbites.model.authentication.AuthResponse
 import com.example.bookbites.model.bid.sentBids.SentBid
@@ -18,8 +19,8 @@ class BookBitesRepoImpl @Inject constructor(val api:BookBitesApi) : BookBitesRep
         userEmail: String,
         userName: String,
         userPassword: String
-    ): Resource<AuthResponse> {
-        return api.registerUser(userEmail,userName,userPassword)
+    ): Resource<String> {
+        return api.registerUser(userEmail = userEmail,userName = userName,userPassword = userPassword)
     }
 
     override suspend fun getAllCategories(): Resource<CategoriesResponse> {

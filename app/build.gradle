@@ -65,6 +65,7 @@ dependencies {
     kapt(libs.kapt)
     annotationProcessor(libs.hilt.android.annotation)
     implementation(libs.coil)
+    implementation(libs.data.store)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.android)
     implementation(libs.ktor.client.serialization)
@@ -78,4 +79,9 @@ dependencies {
     implementation(libs.accompanist.pager)
     implementation(libs.accompanist.pager.indicators)
     implementation(libs.leakcanary.android)
+
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation("androidx.datastore:datastore-preferences-rxjava2:1.1.1")
+    implementation("androidx.datastore:datastore-preferences-rxjava3:1.1.1")
+    implementation("androidx.datastore:datastore-preferences-core:1.1.1")
 }

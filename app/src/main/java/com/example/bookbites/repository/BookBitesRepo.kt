@@ -9,7 +9,7 @@ import com.example.util.Resource
 interface BookBitesRepo {
 
     suspend fun loginUser(userEmail: String,userPassword: String): Resource<AuthResponse>
-    suspend fun registerUser(userEmail: String,userName:String,userPassword: String):Resource<AuthResponse>
+    suspend fun registerUser(userEmail: String,userName:String,userPassword: String):Resource<String>
     suspend fun getAllCategories():Resource<CategoriesResponse>
     suspend fun getBooksByCategories(category:String):Resource<CategoryBooksResponse>
     suspend fun getSentBids():Resource<SentBid>

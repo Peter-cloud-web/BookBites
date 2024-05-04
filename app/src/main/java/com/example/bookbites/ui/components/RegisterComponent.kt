@@ -1,5 +1,6 @@
 package com.example.bookbites.ui.components
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -24,20 +26,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bookbites.R
+import com.example.bookbites.ui.viewmodels.RegistationViewModel
 
 @Composable
 fun Register() {
     var email by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    var registerViewModel: RegistationViewModel = hiltViewModel()
+
     Column(
         modifier = Modifier.padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -57,11 +65,18 @@ fun Register() {
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 30.sp
             )
-
-
         )
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(5.dp))
+
+        Text(
+            text = "Share and exchange books conveniently",
+            style = TextStyle(
+                fontFamily = FontFamily.Cursive,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 30.sp
+            )
+        )
     }
 
     Card(
@@ -83,6 +98,7 @@ fun Register() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            val context = LocalContext.current
             OutlinedTextField(
                 value = email,
                 onValueChange = {
@@ -113,7 +129,10 @@ fun Register() {
 
             Spacer(modifier = Modifier.height(10.dp))
             Button(
-                onClick = {},
+                onClick = {
+                    registerViewModel.registerUser(email, username, password)
+                    Toast.makeText(context, "User registered", Toast.LENGTH_SHORT).show()
+                },
                 colors = ButtonDefaults.buttonColors(Color.Black),
                 modifier = Modifier.width(300.dp).height(50.dp)
             ) {
@@ -128,15 +147,23 @@ fun Register() {
             }
 
             Spacer(modifier = Modifier.height(50.dp))
+
+            ClickableText(
+                text = AnnotatedString("Already have an account? Login"),
+                onClick = {  },
+                style = TextStyle(
+                    color = Color.Blue,
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 15.sp,
+
+                    )
+
+            )
         }
 
     }
 
 }
 
-@Preview(showBackground = false)
-@Composable
-fun RegisterPreview() {
-    Register()
-}
 

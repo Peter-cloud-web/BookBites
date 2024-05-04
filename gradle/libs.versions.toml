@@ -23,9 +23,11 @@ accompanist-pager = "0.32.0"
 accompanist-pager-indicators = "0.32.0"
 leakcanary-android = "2.12"
 tooling-preview-android  = "1.6.3"
+data-store = "1.1.1"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
+data-store = {group ="androidx.datastore",name = "datastore-preferences", version.ref = "data-store"}
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
