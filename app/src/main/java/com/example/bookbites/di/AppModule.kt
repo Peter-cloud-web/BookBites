@@ -5,7 +5,7 @@ import com.example.bookbites.api.BookBitesApi
 import com.example.bookbites.network.BookBitesKtorClient
 import com.example.bookbites.repository.BookBitesRepo
 import com.example.bookbites.repository.BookBitesRepoImpl
-import com.example.bookbites.store.DataStore
+import com.example.bookbites.store.SessionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,8 +26,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideDataStore(@ApplicationContext context: Context):DataStore{
-        return DataStore(context)
+    fun provideDataStore(@ApplicationContext context: Context):SessionManager{
+        return SessionManager(context)
     }
 
     @Provides
@@ -35,5 +35,4 @@ object AppModule {
     fun provideBookBitesRepository(bookBitesApi: BookBitesApi): BookBitesRepo {
         return BookBitesRepoImpl(bookBitesApi)
     }
-
 }

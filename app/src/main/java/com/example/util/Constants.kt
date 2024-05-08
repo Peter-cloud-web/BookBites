@@ -1,7 +1,7 @@
 package com.example.util
 
 object Constants {
-    const val BOOKBITES_API = "192.168.100.79:8080"
+    const val BOOKBITES_API = "192.168.26.212:8080"
     const val LOGIN = "/v1/login"
     const val REGISTER = "/v1/register"
     const val ALL_CATEGORIES = "/v1/getAllCategories"
@@ -9,6 +9,7 @@ object Constants {
     const val ALL_BOOKS_POSTS = "/v1/allBooks"
     const val SENT_BIDS = "/v1/sentBids"
     const val RECEIVED_BIDS ="/v1/receivedBids"
-    const  val CATEGORY = "/v1/getBooksByCategory/"
+    const  val CATEGORY = "/v1/getBooksByCategory"
+    const  val USERDETAILS = "/v1/getLoggedInUser"
 
 }

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookbites.model.authentication.AuthResponse
 import com.example.bookbites.repository.BookBitesRepo
-import com.example.bookbites.store.DataStore
+import com.example.bookbites.store.SessionManager
 import com.example.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,24 +16,33 @@ import javax.inject.Inject
 @HiltViewModel
 class RegistationViewModel @Inject constructor(
     private val bookBitesRepo: BookBitesRepo,
-    private val dataStore: DataStore
+    private val dataStore: SessionManager
 ) : ViewModel() {
 
     private val _authState = MutableStateFlow<Resource<AuthResponse>>(Resource.Loading(null))
     val authState: StateFlow<Resource<AuthResponse>> = _authState
 
     fun registerUser(email: String, username: String, password: String) {
-        viewModelScope.launch {
-            _authState.value = Resource.Loading(null)
-            val result = bookBitesRepo.registerUser(userEmail = email, userName = username, userPassword = password)
-            Log.d("REGISTRATION VIEWMODEL","Data : ${email},${username},${password}")
-            if (result is Resource.Success) {
-                result.data
-            }
-        }
-    }
 
-    private suspend fun saveToken(token: String) {
-        dataStore.saveToken(token)
+        viewModelScope.launch {
+
+            _authState.value = Resource.Loading(null)
+
+            val token = bookBitesRepo.registerUser(userEmail = email, userName = username, userPassword = password)
+
+            if (token is Resource.Success) {
+
+                dataStore.saveToken(token.data.toString())
+
+                val savedToken = dataStore.getToken.toString()
+
+                Log.d("TOKEN MODEL", savedToken?: "Token not found") // Log token or message if not found
+
+                _authState.value = Resource.Success(AuthResponse(savedToken, true))
+            }else{
+                _authState.value = Resource.Error(null,"Failed to register user")
+            }
+
+        }
     }
 }

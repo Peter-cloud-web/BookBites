@@ -12,23 +12,27 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 
-private const val JWT_TOKEN = "token"
+class SessionManager @Inject constructor(@ApplicationContext private val context: Context) {
 
-class DataStore @Inject constructor(@ApplicationContext private val context: Context) {
-
-    companion object{
-        private val Context.dataStore:DataStore<Preferences> by preferencesDataStore("token")
+    companion object {
+        private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("token")
         val JWT_TOKEN = stringPreferencesKey("jwt_token")
     }
 
     val getToken: Flow<String?> = context.dataStore.data
         .map { preferences ->
-           preferences[JWT_TOKEN]?:""
+            preferences[JWT_TOKEN] ?: ""
         }
 
-    suspend fun saveToken(token:String){
-        context.dataStore.edit {preferences ->
+    suspend fun saveToken(token: String) {
+        context.dataStore.edit { preferences ->
             preferences[JWT_TOKEN] = token
+        }
+    }
+
+    suspend fun clearSession() {
+        context.dataStore.edit { preferences ->
+            preferences.clear()
         }
     }
 }
