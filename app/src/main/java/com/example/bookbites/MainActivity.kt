@@ -14,6 +14,7 @@ import com.example.bookbites.ui.components.Books
 import com.example.bookbites.ui.components.Login
 import com.example.bookbites.ui.components.Register
 import com.example.bookbites.ui.theme.BookBitesTheme
+import com.example.navigation.AppNavigation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.onTertiary
                 ) {
-                    Login()
+                    AppNavigation()
                 }
             }
         }
