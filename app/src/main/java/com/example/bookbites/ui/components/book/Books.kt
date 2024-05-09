@@ -1,4 +1,4 @@
-package com.example.bookbites.ui.components
+package com.example.bookbites.ui.components.book
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -30,17 +30,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.bookbites.R
+import com.example.navigation.Screens
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Books() {
+fun Books(navController: NavController) {
     Scaffold(
         topBar = { TopAppBar() },
-        bottomBar = { BottomAppBar() }
+        bottomBar = { BottomAppBar(navController) }
     ) {
 
     }
@@ -122,13 +123,13 @@ fun TopAppBar() {
 }
 
 @Composable
-fun BottomAppBar() {
+fun BottomAppBar(navController: NavController) {
     BottomAppBar(
         actions = {
 
             IconButton(
                 modifier = Modifier.padding(start = 35.dp,),
-                onClick = { /* do something */ }) {
+                onClick = {navController.navigate(Screens.HomeScreen.route)}) {
                 Icon(
                     Icons.Default.Home,
                     contentDescription = "Localized description",
@@ -138,7 +139,7 @@ fun BottomAppBar() {
                     text = "Home"
                 )
             }
-            IconButton(onClick = { /* do something */ }) {
+            IconButton(onClick = {navController.navigate(Screens.BidsScreen.route)}) {
                 Icon(
                     Icons.Filled.ConnectWithoutContact,
                     contentDescription = "Localized description",
@@ -178,10 +179,4 @@ fun BottomAppBar() {
         },
         containerColor = MaterialTheme.colorScheme.onTertiary
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun BookPosts() {
-    Books()
 }

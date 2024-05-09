@@ -1,9 +1,10 @@
 package com.example.bookbites.ui.sceens
 
 import androidx.compose.runtime.Composable
-import com.example.bookbites.ui.components.Books
+import androidx.navigation.NavController
+import com.example.bookbites.ui.components.book.Books
 
 @Composable
-fun HomeScreen(){
-    Books()
+fun HomeScreen(navController: NavController){
+    Books(navController)
 }

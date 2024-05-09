@@ -20,7 +20,7 @@ fun AppNavigation() {
         startDestination = Screens.LoginScreen.route
     ) {
         composable(Screens.LoginScreen.route) {
-            LoginScreen()
+            LoginScreen(navController)
         }
 
         composable(Screens.Registration.route) {
@@ -28,11 +28,11 @@ fun AppNavigation() {
         }
 
         composable(Screens.HomeScreen.route) {
-            HomeScreen()
+            HomeScreen(navController)
         }
 
         composable(Screens.BidsScreen.route) {
-            BidsScreen()
+            BidsScreen(navController)
         }
 
         composable(Screens.SentBids.route) {

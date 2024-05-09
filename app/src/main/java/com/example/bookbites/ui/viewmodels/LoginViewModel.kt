@@ -1,16 +1,20 @@
 package com.example.bookbites.ui.viewmodels
 
+import android.provider.ContactsContract.CommonDataKinds.Email
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import coil.network.HttpException
 import com.example.bookbites.model.authentication.AuthResponse
 import com.example.bookbites.repository.BookBitesRepo
 import com.example.bookbites.store.SessionManager
+import com.example.bookbites.ui.uistates.LoginStates
 import com.example.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,33 +24,61 @@ class LoginViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private val _loginAuthState = MutableStateFlow<Resource<AuthResponse>>(Resource.Loading(null))
-    val loginAuthState: StateFlow<Resource<AuthResponse>> = _loginAuthState
+    private val _loginAuthState = MutableStateFlow(LoginStates())
+    val loginAuthState = _loginAuthState.asStateFlow()
 
-    fun LoginUser(email: String, password: String) {
+    fun LoginUser(email:String,password:String) {
 
-        viewModelScope.launch {
+        try {
+            viewModelScope.launch {
 
-            _loginAuthState.value = Resource.Loading(null)
+                val token = bookBitesRepo.loginUser(email, password)
 
-            val token = bookBitesRepo.loginUser(email, password)
+                _loginAuthState.value = when (token) {
+                    is Resource.Loading -> LoginStates(isLoading = true)
+                    is Resource.Success -> {
+                        val userDetails = bookBitesRepo.getLoggedUser().data?.userDetailResponse
+                        Log.d("LOGINVIEWMODEL","${userDetails}")
+                        sessionManager.saveToken(token.data.toString())
+                        LoginStates(success = AuthResponse(token.data.toString(), true))
+                    }
 
-            if (token is Resource.Success) {
+                    is Resource.Error -> LoginStates(error("Failed to login user"))
+                }
 
-                Log.d("LOGINVIEWMODEL","${token.data.toString()}")
-
-                sessionManager.saveToken(token.data.toString())
-
-                _loginAuthState.value = Resource.Success(AuthResponse(token.data.toString(), true))
-
-                val userDetails = bookBitesRepo.getLoggedUser().data?.userDetailResponse
-
-                Log.d("LOGINVIEWMODEL","${userDetails}")
-
-
-            } else {
-                _loginAuthState.value = Resource.Error(null, "Failed to login user")
             }
+        } catch (e: Exception) {
+            _loginAuthState.value =
+                LoginStates(error = e.localizedMessage ?: "An unexpected error occurred")
+        } catch (e: HttpException) {
+            _loginAuthState.value =
+                LoginStates(error = e.localizedMessage ?: "An unexpected error occurred")
+        } catch (e: IOException) {
+            _loginAuthState.value =
+                LoginStates(error = e.localizedMessage ?: "An unexpected error occurred")
         }
+
+//        viewModelScope.launch {
+//
+////            _loginAuthState.value = Resource.Loading(null)
+//            val token = bookBitesRepo.loginUser(email, password)
+
+
+//            if (token is Resource.Success) {
+//
+//                Log.d("LOGINVIEWMODEL","${token.data.toString()}")
+//
+//
+//
+//                _loginAuthState.value = Resource.Success(AuthResponse(token.data.toString(), true))
+//
+//                val userDetails = bookBitesRepo.getLoggedUser().data?.userDetailResponse
+//
+//                Log.d("LOGINVIEWMODEL","${userDetails}")
+//
+//
+//            } else {
+//                _loginAuthState.value = Resource.Error(null, "Failed to login user")
+//            }
     }
 }
