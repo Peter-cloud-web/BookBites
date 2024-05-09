@@ -1,6 +1,5 @@
 package com.example.bookbites.api
 
-import android.util.Log
 import coil.network.HttpException
 import com.example.bookbites.model.User.UserDetailsResponse
 import com.example.bookbites.model.User.UserDetailsResponseItem
@@ -8,6 +7,7 @@ import com.example.bookbites.model.authentication.AuthResponse
 import com.example.bookbites.model.authentication.Login
 import com.example.bookbites.model.authentication.Register
 import com.example.bookbites.model.bid.sentBids.SentBid
+import com.example.bookbites.model.books.BooksResponse
 import com.example.bookbites.model.categories.all_categories.CategoriesResponse
 import com.example.bookbites.model.categories.books_categories.CategoryBooksResponse
 import com.example.bookbites.store.SessionManager
@@ -25,7 +25,10 @@ import kotlinx.coroutines.flow.firstOrNull
 import java.io.IOException
 import javax.inject.Inject
 
-class BookBitesApi @Inject constructor(val httpClient: HttpClient, var sessionManager: SessionManager) {
+class BookBitesApi @Inject constructor(
+    val httpClient: HttpClient,
+    var sessionManager: SessionManager
+) {
 
     suspend fun loginUser(userEmail: String, userPassword: String): Resource<String> {
 
@@ -40,11 +43,11 @@ class BookBitesApi @Inject constructor(val httpClient: HttpClient, var sessionMa
                 contentType(ContentType.Application.Json)
                 body = Login(userEmail, userPassword)
             }
-            if(authResponse.success){
+            if (authResponse.success) {
                 val token = authResponse.message
                 Resource.Success(token)
-            } else{
-                Resource.Error(null,"Login failed:${authResponse.message}")
+            } else {
+                Resource.Error(null, "Login failed:${authResponse.message}")
 
             }
         } catch (e: Exception) {
@@ -70,14 +73,18 @@ class BookBitesApi @Inject constructor(val httpClient: HttpClient, var sessionMa
                     encodedPath = Constants.REGISTER
                 }
                 contentType(ContentType.Application.Json)
-                body = Register(userEmail = userEmail, userName = userName, userPassword = userPassword)
+                body = Register(
+                    userEmail = userEmail,
+                    userName = userName,
+                    userPassword = userPassword
+                )
             }
 
-            if(authResponse.success){
+            if (authResponse.success) {
                 val token = authResponse.message
                 Resource.Success(token)
-            } else{
-                Resource.Error(null,"Registration failed:${authResponse.message}")
+            } else {
+                Resource.Error(null, "Registration failed:${authResponse.message}")
 
             }
 
@@ -170,10 +177,38 @@ class BookBitesApi @Inject constructor(val httpClient: HttpClient, var sessionMa
                         host = Constants.BOOKBITES_API
                         encodedPath = Constants.USERDETAILS
                     }
-                    header(HttpHeaders.Authorization,"Bearer $token")
+                    header(HttpHeaders.Authorization, "Bearer $token")
                 }
                 Resource.Success(UserDetailsResponse(sentBids))
-            }else{
+            } else {
+                Resource.Error(null, "Token not found")
+            }
+
+        } catch (e: Exception) {
+            Resource.Error(null, e.localizedMessage ?: "A unexpected error occurred")
+        } catch (e: IOException) {
+            Resource.Error(null, e.localizedMessage ?: "Network server error")
+        } catch (e: HttpException) {
+            Resource.Error(null, e.localizedMessage ?: "Network error")
+        }
+    }
+
+    suspend fun getAllBooks(): Resource<BooksResponse> {
+        return try {
+            val token = sessionManager.getToken.firstOrNull()
+
+            if (token != null) {
+                Resource.Loading(null)
+                val books = httpClient.get<BooksResponse>() {
+                    url {
+                        protocol = URLProtocol.HTTP
+                        host = Constants.BOOKBITES_API
+                        encodedPath = Constants.BOOKS
+                    }
+                    header(HttpHeaders.Authorization, "Bearer $token")
+                }
+                Resource.Success(books)
+            } else {
                 Resource.Error(null, "Token not found")
             }
 

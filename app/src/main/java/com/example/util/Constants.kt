@@ -11,5 +11,6 @@ object Constants {
     const val RECEIVED_BIDS ="/v1/receivedBids"
     const  val CATEGORY = "/v1/getBooksByCategory"
     const  val USERDETAILS = "/v1/getLoggedInUser"
+    const val BOOKS = "/v1/allBooks"
 
 }

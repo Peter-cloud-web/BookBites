@@ -30,10 +30,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bookbites.R
-import okhttp3.internal.notify
+import com.example.bookbites.model.books.BookDetails
 
 @Composable
-fun bookItem() {
+fun bookItem(books: BookDetails) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -49,7 +49,7 @@ fun bookItem() {
         Column(modifier = Modifier.padding(start = 1.dp, top = 1.dp)) {
 
             Row(
-                modifier = Modifier.padding(top = 10.dp,start = 10.dp)
+                modifier = Modifier.padding(top = 10.dp, start = 10.dp)
             ) {
 
                 Image(
@@ -61,16 +61,18 @@ fun bookItem() {
                         .border(1.dp, Color.Green, CircleShape)
 
                 )
-
-                Text(
-                    modifier = Modifier.padding(start = 10.dp, top = 10.dp),
-                    text = "Peter, just shared a book",
-                    style = TextStyle(
-                        fontFamily = FontFamily.Serif,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp
+                books.owner.let { owner ->
+                    Text(
+                        modifier = Modifier.padding(start = 10.dp, top = 10.dp),
+                        text = "${owner.toString()}, just posted a book. Bid?",
+                        style = TextStyle(
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 12.sp
+                        )
                     )
-                )
+                }
+
             }
             Row {
                 Text(
@@ -84,16 +86,19 @@ fun bookItem() {
                     )
                 )
 
-                Text(
-                    modifier = Modifier.padding(start = 55.dp),
-                    text = "Psychology of Money",
-                    style = TextStyle(
-                        color = Color.Gray,
-                        fontFamily = FontFamily.Serif,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 10.sp
+                books.book.title.let { title ->
+                    Text(
+                        modifier = Modifier.padding(start = 55.dp),
+                        text = title.toString(),
+                        style = TextStyle(
+                            color = Color.Gray,
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 10.sp
+                        )
                     )
-                )
+                }
+
             }
 
             Row {
@@ -107,17 +112,19 @@ fun bookItem() {
                         fontSize = 10.sp
                     )
                 )
-
-                Text(
-                    modifier = Modifier.padding(start = 45.dp),
-                    text = "Morgan Housel",
-                    style = TextStyle(
-                        color = Color.Gray,
-                        fontFamily = FontFamily.Serif,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 10.sp
+                books.book.author.let { author ->
+                    Text(
+                        modifier = Modifier.padding(start = 45.dp),
+                        text = author.toString(),
+                        style = TextStyle(
+                            color = Color.Gray,
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 10.sp
+                        )
                     )
-                )
+                }
+
             }
 
             Row {
@@ -131,17 +138,19 @@ fun bookItem() {
                         fontSize = 10.sp
                     )
                 )
-
-                Text(
-                    modifier = Modifier.padding(start = 40.dp),
-                    text = "Self help",
-                    style = TextStyle(
-                        color = Color.Gray,
-                        fontFamily = FontFamily.Serif,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 10.sp
+                books.book.category.let { category ->
+                    Text(
+                        modifier = Modifier.padding(start = 40.dp),
+                        text = category.toString(),
+                        style = TextStyle(
+                            color = Color.Gray,
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 10.sp
+                        )
                     )
-                )
+                }
+
             }
 
             Row {
@@ -155,17 +164,18 @@ fun bookItem() {
                         fontSize = 10.sp
                     )
                 )
-
-                Text(
-                    modifier = Modifier.padding(start = 30.dp),
-                    text = "About money",
-                    style = TextStyle(
-                        color = Color.Gray,
-                        fontFamily = FontFamily.Serif,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 10.sp
+                books.book.summary.let { summary ->
+                    Text(
+                        modifier = Modifier.padding(start = 30.dp),
+                        text = summary.toString(),
+                        style = TextStyle(
+                            color = Color.Gray,
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 10.sp
+                        )
                     )
-                )
+                }
             }
         }
         Row(modifier = Modifier.padding(start = 5.dp, top = 5.dp)) {
@@ -190,17 +200,19 @@ fun bookItem() {
                     tint = Color.Gray
                 )
             }
+            books.timeOfCreation.let { date ->
 
-            Text(
-                modifier = Modifier.padding(start = 200.dp,top = 30.dp),
-                text = "posted at 1/4/2024",
-                style = TextStyle(
-                    color = Color.Gray,
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 10.sp
+                Text(
+                    modifier = Modifier.padding(start = 200.dp, top = 30.dp),
+                    text = date.toString(),
+                    style = TextStyle(
+                        color = Color.Gray,
+                        fontFamily = FontFamily.Serif,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 10.sp
+                    )
                 )
-            )
+            }
         }
 
 
@@ -210,5 +222,4 @@ fun bookItem() {
 @Preview(showBackground = false)
 @Composable
 fun BookItemPreview() {
-    bookItem()
 }
