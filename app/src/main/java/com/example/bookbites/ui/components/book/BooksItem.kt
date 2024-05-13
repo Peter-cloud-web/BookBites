@@ -4,7 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -26,24 +26,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bookbites.R
-import com.example.bookbites.model.books.BookDetails
+import com.example.bookbites.model.books.BookResponseItem
 
 @Composable
-fun bookItem(books: BookDetails) {
+fun bookItem(books: BookResponseItem, navigationRoute:String, onBookClicked: Unit) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 20.dp, top = 250.dp, end = 20.dp, bottom = 250.dp),
+            .fillMaxSize()
+            .padding(1.dp),
         shape = MaterialTheme.shapes.large,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.onTertiary
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 10.dp
+            defaultElevation = 0.dp
         )
     ) {
         Column(modifier = Modifier.padding(start = 1.dp, top = 1.dp)) {
@@ -64,11 +63,11 @@ fun bookItem(books: BookDetails) {
                 books.owner.let { owner ->
                     Text(
                         modifier = Modifier.padding(start = 10.dp, top = 10.dp),
-                        text = "${owner.toString()}, just posted a book. Bid?",
+                        text = owner.toUpperCase(),
                         style = TextStyle(
                             fontFamily = FontFamily.Serif,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 12.sp
+                            fontSize = 15.sp
                         )
                     )
                 }
@@ -204,7 +203,7 @@ fun bookItem(books: BookDetails) {
 
                 Text(
                     modifier = Modifier.padding(start = 200.dp, top = 30.dp),
-                    text = date.toString(),
+                    text = "posted on ${date.toString()}",
                     style = TextStyle(
                         color = Color.Gray,
                         fontFamily = FontFamily.Serif,
@@ -217,9 +216,4 @@ fun bookItem(books: BookDetails) {
 
 
     }
-}
-
-@Preview(showBackground = false)
-@Composable
-fun BookItemPreview() {
 }

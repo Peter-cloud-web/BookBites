@@ -7,6 +7,8 @@ import com.example.bookbites.model.authentication.AuthResponse
 import com.example.bookbites.model.authentication.Login
 import com.example.bookbites.model.authentication.Register
 import com.example.bookbites.model.bid.sentBids.SentBid
+import com.example.bookbites.model.books.BookResponse
+import com.example.bookbites.model.books.BookResponseItem
 import com.example.bookbites.model.books.BooksResponse
 import com.example.bookbites.model.categories.all_categories.CategoriesResponse
 import com.example.bookbites.model.categories.books_categories.CategoryBooksResponse
@@ -22,6 +24,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.serialization.json.Json
 import java.io.IOException
 import javax.inject.Inject
 
@@ -193,13 +196,13 @@ class BookBitesApi @Inject constructor(
         }
     }
 
-    suspend fun getAllBooks(): Resource<BooksResponse> {
+    suspend fun getAllBooks(): Resource<BookResponse> {
         return try {
             val token = sessionManager.getToken.firstOrNull()
 
             if (token != null) {
                 Resource.Loading(null)
-                val books = httpClient.get<BooksResponse>() {
+                val response = httpClient.get<List<BookResponseItem>>() {
                     url {
                         protocol = URLProtocol.HTTP
                         host = Constants.BOOKBITES_API
@@ -207,7 +210,7 @@ class BookBitesApi @Inject constructor(
                     }
                     header(HttpHeaders.Authorization, "Bearer $token")
                 }
-                Resource.Success(books)
+                Resource.Success(BookResponse(response))
             } else {
                 Resource.Error(null, "Token not found")
             }

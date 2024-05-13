@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.bookbites.ui.components.book.BookDetails
 import com.example.bookbites.ui.sceens.BidsScreen
 import com.example.bookbites.ui.sceens.HomeScreen
 import com.example.bookbites.ui.sceens.LoginScreen
@@ -28,7 +29,18 @@ fun AppNavigation() {
         }
 
         composable(Screens.HomeScreen.route) {
-            HomeScreen(navController)
+            HomeScreen(
+                navController,
+                onBookClicked = {id ->
+                   navController.navigate(
+                       "${Screens.BookDetailScreen.route}/${id}"
+                   )
+                }
+            )
+        }
+
+        composable(Screens.BookDetailScreen.route) {
+            BookDetails()
         }
 
         composable(Screens.BidsScreen.route) {

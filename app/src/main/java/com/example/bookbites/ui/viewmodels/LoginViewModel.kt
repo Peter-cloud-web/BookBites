@@ -57,28 +57,5 @@ class LoginViewModel @Inject constructor(
             _loginAuthState.value =
                 LoginStates(error = e.localizedMessage ?: "An unexpected error occurred")
         }
-
-//        viewModelScope.launch {
-//
-////            _loginAuthState.value = Resource.Loading(null)
-//            val token = bookBitesRepo.loginUser(email, password)
-
-
-//            if (token is Resource.Success) {
-//
-//                Log.d("LOGINVIEWMODEL","${token.data.toString()}")
-//
-//
-//
-//                _loginAuthState.value = Resource.Success(AuthResponse(token.data.toString(), true))
-//
-//                val userDetails = bookBitesRepo.getLoggedUser().data?.userDetailResponse
-//
-//                Log.d("LOGINVIEWMODEL","${userDetails}")
-//
-//
-//            } else {
-//                _loginAuthState.value = Resource.Error(null, "Failed to login user")
-//            }
     }
 }

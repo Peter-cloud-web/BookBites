@@ -1,5 +1,6 @@
 package com.example.bookbites.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.network.HttpException
@@ -20,18 +21,18 @@ class BooksViewModel @Inject constructor(private val bookBitesRepo: BookBitesRep
     private val _books = MutableStateFlow(BookStates())
     val book = _books.asStateFlow()
 
+    init {
+        getBooks()
+    }
+
     fun getBooks() {
         try {
             viewModelScope.launch {
                 val booksData = bookBitesRepo.getBooks()
+                Log.d("BOOKSVIEWMODEL","${booksData.data}")
                 _books.value = when (booksData) {
                     is Resource.Loading -> BookStates(isLoading = true)
-                    is Resource.Success -> BookStates(isSuccess = booksData.data?.let {
-                        BooksResponse(
-                            it.allBooks
-                        )
-                    })
-
+                    is Resource.Success -> BookStates(isSuccess = booksData.data)
                     is Resource.Error -> BookStates(error = "Unable to get books")
                 }
             }

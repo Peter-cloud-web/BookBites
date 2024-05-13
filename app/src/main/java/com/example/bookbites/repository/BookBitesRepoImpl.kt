@@ -6,6 +6,7 @@ import com.example.bookbites.api.BookBitesApi
 import com.example.bookbites.model.User.UserDetailsResponse
 import com.example.bookbites.model.authentication.AuthResponse
 import com.example.bookbites.model.bid.sentBids.SentBid
+import com.example.bookbites.model.books.BookResponse
 import com.example.bookbites.model.books.BooksResponse
 import com.example.bookbites.model.categories.all_categories.CategoriesResponse
 import com.example.bookbites.model.categories.books_categories.CategoryBooksResponse
@@ -41,7 +42,7 @@ class BookBitesRepoImpl @Inject constructor(val api: BookBitesApi) : BookBitesRe
       return api.getLoggedUser()
     }
 
-    override suspend fun getBooks(): Resource<BooksResponse> {
+    override suspend fun getBooks(): Resource<BookResponse> {
         return api.getAllBooks()
     }
 
