@@ -12,5 +12,6 @@ object Constants {
     const  val CATEGORY = "/v1/getBooksByCategory"
     const  val USERDETAILS = "/v1/getLoggedInUser"
     const val BOOKS = "/v1/allBooks"
+    const val BOOKDETAIL = "/v1/getBookById"
 
 }

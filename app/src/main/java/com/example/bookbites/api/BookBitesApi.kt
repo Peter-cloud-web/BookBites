@@ -9,7 +9,7 @@ import com.example.bookbites.model.authentication.Register
 import com.example.bookbites.model.bid.sentBids.SentBid
 import com.example.bookbites.model.books.BookResponse
 import com.example.bookbites.model.books.BookResponseItem
-import com.example.bookbites.model.books.BooksResponse
+import com.example.bookbites.model.books.bookDetails.BookDetailsResponse
 import com.example.bookbites.model.categories.all_categories.CategoriesResponse
 import com.example.bookbites.model.categories.books_categories.CategoryBooksResponse
 import com.example.bookbites.store.SessionManager
@@ -24,7 +24,6 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.serialization.json.Json
 import java.io.IOException
 import javax.inject.Inject
 
@@ -211,6 +210,34 @@ class BookBitesApi @Inject constructor(
                     header(HttpHeaders.Authorization, "Bearer $token")
                 }
                 Resource.Success(BookResponse(response))
+            } else {
+                Resource.Error(null, "Token not found")
+            }
+
+        } catch (e: Exception) {
+            Resource.Error(null, e.localizedMessage ?: "A unexpected error occurred")
+        } catch (e: IOException) {
+            Resource.Error(null, e.localizedMessage ?: "Network server error")
+        } catch (e: HttpException) {
+            Resource.Error(null, e.localizedMessage ?: "Network error")
+        }
+    }
+
+    suspend fun getBookById(id: Int): Resource<BookDetailsResponse> {
+        return try {
+            val token = sessionManager.getToken.firstOrNull()
+
+            if (token != null) {
+                Resource.Loading(null)
+                val response = httpClient.get<BookDetailsResponse>() {
+                    url {
+                        protocol = URLProtocol.HTTP
+                        host = Constants.BOOKBITES_API
+                        encodedPath = Constants.BOOKDETAIL + "/${id}"
+                    }
+                    header(HttpHeaders.Authorization, "Bearer $token")
+                }
+                Resource.Success(response)
             } else {
                 Resource.Error(null, "Token not found")
             }
