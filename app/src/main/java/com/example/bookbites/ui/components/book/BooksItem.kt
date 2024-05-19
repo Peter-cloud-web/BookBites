@@ -1,7 +1,8 @@
 package com.example.bookbites.ui.components.book
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,8 +12,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.FastForward
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -30,25 +34,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bookbites.R
 import com.example.bookbites.model.books.BookResponseItem
+import java.text.SimpleDateFormat
+import java.util.Date
+
 
 @Composable
-fun bookItem(books: BookResponseItem, navigationRoute:String, onBookClicked: Unit) {
+fun bookItem(books: BookResponseItem, navigationRoute: String, onBookClicked: (Int) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxSize()
-            .padding(1.dp),
-        shape = MaterialTheme.shapes.large,
+            .clickable { onBookClicked(books.bookId) },
+        shape = MaterialTheme.shapes.small,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.onTertiary
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 0.dp
-        )
+        ),
+        border = BorderStroke(1.dp, Color.LightGray),
     ) {
         Column(modifier = Modifier.padding(start = 1.dp, top = 1.dp)) {
 
             Row(
-                modifier = Modifier.padding(top = 10.dp, start = 10.dp)
+                modifier = Modifier.padding(top = 25.dp, start = 10.dp)
             ) {
 
                 Image(
@@ -57,43 +65,74 @@ fun bookItem(books: BookResponseItem, navigationRoute:String, onBookClicked: Uni
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(34.dp)
                         .clip(CircleShape)
-                        .border(1.dp, Color.Green, CircleShape)
+
 
                 )
-                books.owner.let { owner ->
-                    Text(
-                        modifier = Modifier.padding(start = 10.dp, top = 10.dp),
-                        text = owner.toUpperCase(),
-                        style = TextStyle(
-                            fontFamily = FontFamily.Serif,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp
+
+                Column {
+                    books.owner.let { owner ->
+                        Text(
+                            modifier = Modifier.padding(start = 15.dp, top = 1.dp),
+                            text = owner,
+                            style = TextStyle(
+                                fontFamily = FontFamily.SansSerif,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 15.sp
+                            )
                         )
-                    )
+                    }
+
+                    books.timeOfCreation.let { date ->
+
+                        Text(
+
+                            modifier = Modifier.padding(start = 15.dp, top = 8.dp),
+                            text = "${convertLongToTime(date)}",
+                            style = TextStyle(
+                                color = Color.Black,
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 11.sp
+                            )
+                        )
+                    }
                 }
 
+
+                IconButton(
+                    onClick = {},
+                    modifier = Modifier.padding(start = 250.dp)
+                ) {
+                    Icon(
+                        Icons.Filled.Menu,
+                        contentDescription = null,
+                        modifier = Modifier.size(15.dp),
+                        tint = Color.DarkGray
+                    )
+                }
             }
+
             Row {
                 Text(
-                    modifier = Modifier.padding(start = 65.dp),
-                    text = "Title",
+                    modifier = Modifier.padding(start = 15.dp, top = 10.dp),
+                    text = "Book :",
                     style = TextStyle(
-                        color = Color.Gray,
+                        color = Color.Black,
                         fontFamily = FontFamily.Serif,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 10.sp
+                        fontSize = 11.sp
                     )
                 )
 
                 books.book.title.let { title ->
                     Text(
-                        modifier = Modifier.padding(start = 55.dp),
+                        modifier = Modifier.padding(start = 5.dp, top = 10.dp),
                         text = title.toString(),
                         style = TextStyle(
-                            color = Color.Gray,
+                            color = Color.Black,
                             fontFamily = FontFamily.Serif,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 10.sp
+                            fontSize = 11.sp
                         )
                     )
                 }
@@ -102,24 +141,24 @@ fun bookItem(books: BookResponseItem, navigationRoute:String, onBookClicked: Uni
 
             Row {
                 Text(
-                    modifier = Modifier.padding(start = 65.dp),
-                    text = "Author",
+                    modifier = Modifier.padding(start = 15.dp, top = 10.dp),
+                    text = "Written by ",
                     style = TextStyle(
-                        color = Color.Gray,
+                        color = Color.Black,
                         fontFamily = FontFamily.Serif,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 10.sp
+                        fontSize = 11.sp
                     )
                 )
                 books.book.author.let { author ->
                     Text(
-                        modifier = Modifier.padding(start = 45.dp),
+                        modifier = Modifier.padding(start = 3.dp, top = 10.dp),
                         text = author.toString(),
                         style = TextStyle(
-                            color = Color.Gray,
+                            color = Color.Black,
                             fontFamily = FontFamily.Serif,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 10.sp
+                            fontSize = 11.sp
                         )
                     )
                 }
@@ -128,24 +167,24 @@ fun bookItem(books: BookResponseItem, navigationRoute:String, onBookClicked: Uni
 
             Row {
                 Text(
-                    modifier = Modifier.padding(start = 65.dp),
-                    text = "Category",
+                    modifier = Modifier.padding(start = 15.dp, top = 10.dp),
+                    text = "Category : ",
                     style = TextStyle(
-                        color = Color.Gray,
+                        color = Color.Black,
                         fontFamily = FontFamily.Serif,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 10.sp
+                        fontSize = 11.sp
                     )
                 )
                 books.book.category.let { category ->
                     Text(
-                        modifier = Modifier.padding(start = 40.dp),
+                        modifier = Modifier.padding(start = 3.dp, top = 10.dp),
                         text = category.toString(),
                         style = TextStyle(
-                            color = Color.Gray,
+                            color = Color.Black,
                             fontFamily = FontFamily.Serif,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 10.sp
+                            fontSize = 11.sp
                         )
                     )
                 }
@@ -154,38 +193,38 @@ fun bookItem(books: BookResponseItem, navigationRoute:String, onBookClicked: Uni
 
             Row {
                 Text(
-                    modifier = Modifier.padding(start = 65.dp),
-                    text = "Description",
+                    modifier = Modifier.padding(start = 15.dp, top = 10.dp),
+                    text = "Summary : ",
                     style = TextStyle(
-                        color = Color.Gray,
+                        color = Color.Black,
                         fontFamily = FontFamily.Serif,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 10.sp
+                        fontSize = 11.sp
                     )
                 )
                 books.book.summary.let { summary ->
                     Text(
-                        modifier = Modifier.padding(start = 30.dp),
+                        modifier = Modifier.padding(start = 3.dp, top = 10.dp),
                         text = summary.toString(),
                         style = TextStyle(
-                            color = Color.Gray,
+                            color = Color.Black,
                             fontFamily = FontFamily.Serif,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 10.sp
+                            fontSize = 11.sp
                         )
                     )
                 }
             }
         }
-        Row(modifier = Modifier.padding(start = 5.dp, top = 5.dp)) {
+        Row(modifier = Modifier.padding(start = 5.dp, top = 25.dp)) {
             IconButton(
                 onClick = {},
             ) {
                 Icon(
-                    Icons.Filled.Bookmark,
+                    Icons.Filled.BookmarkBorder,
                     contentDescription = null,
                     modifier = Modifier.size(20.dp),
-                    tint = Color.Gray
+                    tint = Color.DarkGray
                 )
             }
 
@@ -193,27 +232,29 @@ fun bookItem(books: BookResponseItem, navigationRoute:String, onBookClicked: Uni
                 onClick = {},
             ) {
                 Icon(
-                    Icons.Filled.Favorite,
+                    Icons.Filled.FavoriteBorder,
                     contentDescription = null,
                     modifier = Modifier.size(20.dp),
-                    tint = Color.Gray
+                    tint = Color.DarkGray
                 )
             }
-            books.timeOfCreation.let { date ->
 
-                Text(
-                    modifier = Modifier.padding(start = 200.dp, top = 30.dp),
-                    text = "posted on ${date.toString()}",
-                    style = TextStyle(
-                        color = Color.Gray,
-                        fontFamily = FontFamily.Serif,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 10.sp
-                    )
+            IconButton(
+                onClick = {},
+            ) {
+                Icon(
+                    Icons.Filled.FastForward,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    tint = Color.DarkGray
                 )
             }
         }
-
-
     }
+}
+
+fun convertLongToTime(time: Long): String {
+    val date = Date(time)
+    val format = SimpleDateFormat("yyyy.MM.dd HH:mm")
+    return format.format(date)
 }

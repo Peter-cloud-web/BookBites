@@ -1,13 +1,11 @@
 package com.example.bookbites.ui.components.book
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.AppBarDefaults
@@ -19,10 +17,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.ConnectWithoutContact
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.rounded.AddAlert
+import androidx.compose.material.icons.filled.Sell
+import androidx.compose.material.icons.outlined.Bookmark
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Sell
+import androidx.compose.material.icons.rounded.People
+import androidx.compose.material.icons.rounded.PeopleOutline
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -33,49 +36,66 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.bookbites.R
 import com.example.bookbites.model.books.BookResponseItem
 import com.example.bookbites.ui.viewmodels.BooksViewModel
 import com.example.navigation.Screens
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Books(navController: NavController, navigationRoute: String, onBookClicked: (id: Int) -> Unit) {
+fun Books(navController: NavController, onBookClicked: (bookId: Int?) -> Unit) {
 
     val booksViewModel: BooksViewModel = hiltViewModel()
     val books = booksViewModel.book.collectAsState()
     Scaffold(
         topBar = { TopAppBar() },
-        bottomBar = { BottomAppBar(navController) }
-    ) {
-        books.value.let { states ->
-            when {
+        bottomBar = { BottomAppBar(navController) },
+        content = { paddingValues ->
 
-                states.isLoading -> {
-                    CircularProgressIndicator()
-                }
+            Column(
+                modifier = Modifier
+                    .padding(paddingValues)
+            ) {
 
-                states.isSuccess != null -> {
-                    states.isSuccess?.let { response ->
-                        response.books?.let { it1 -> BooksList(it1,navigationRoute,
-                            onBookClicked as (Int?) -> Unit
-                        ) }
+                books.value.let { states ->
+                    when {
+
+                        states.isLoading -> {
+                            CircularProgressIndicator()
+                        }
+
+                        states.isSuccess != null -> {
+                            states.isSuccess.books?.let { bookList ->
+                                BooksList(
+                                    books = bookList,
+                                    navigationRoute = "BookDetails",
+                                    onBookClicked = { bookId ->
+                                        if (bookId != null) {
+                                            navController.navigate("BookDetails/${bookId}")
+                                        }
+                                    },
+
+                                )
+                            }
+                        }
+
+                        states.error != null -> "An unexpected error occcurred"
+
+                        else -> {}
                     }
                 }
-
-                states.error != null -> "An unexpected error occcurred"
-
-                else -> {}
             }
+
         }
-    }
+
+    )
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -83,7 +103,7 @@ fun Books(navController: NavController, navigationRoute: String, onBookClicked: 
 fun TopAppBar() {
     MaterialTheme {
         TopAppBar(
-            modifier = Modifier.height(150.dp),
+            modifier = Modifier.height(100.dp),
             title = {
                 Text(
                     text = "BookBites",
@@ -105,43 +125,21 @@ fun TopAppBar() {
                 IconButton(
                     onClick = {},
                 ) {
-                    Image(
-                        modifier = Modifier.height(30.dp).width(30.dp),
-                        painter = painterResource(R.drawable.baseline_filter_alt_24),
-                        contentDescription = null
-                    )
+                    Icon(Icons.Default.FilterList, contentDescription = null, tint = Color.Black)
 
                 }
 
                 Column(
 
                 ) {
+
                     IconButton(
-                        modifier = Modifier.padding(top = 35.dp, end = 20.dp),
+                        modifier = Modifier.padding(end = 20.dp),
                         onClick = {},
                     ) {
                         Icon(Icons.Filled.AccountCircle, contentDescription = null)
                     }
-
-                    Text(
-                        modifier = Modifier.padding(start = 10.dp),
-                        text = "Hello, ",
-                        fontFamily = FontFamily.Serif,
-                        fontWeight = FontWeight.Light,
-                        fontSize = 15.sp
-
-                    )
-
-                    Text(
-                        modifier = Modifier.padding(start = 10.dp),
-                        text = "Peter",
-                        fontFamily = FontFamily.Serif,
-                        fontWeight = FontWeight.Light,
-                        fontSize = 15.sp
-
-                    )
                 }
-
 
             },
             backgroundColor = MaterialTheme.colorScheme.onTertiary,
@@ -160,8 +158,9 @@ fun BottomAppBar(navController: NavController) {
                 modifier = Modifier.padding(start = 35.dp),
                 onClick = { navController.navigate(Screens.HomeScreen.route) }) {
                 Icon(
-                    Icons.Default.Home,
+                    Icons.Outlined.Home,
                     contentDescription = "Localized description",
+                    tint = Color.Red
                 )
                 Text(
                     modifier = Modifier.padding(top = 35.dp, start = 10.dp),
@@ -170,8 +169,9 @@ fun BottomAppBar(navController: NavController) {
             }
             IconButton(onClick = { navController.navigate(Screens.BidsScreen.route) }) {
                 Icon(
-                    Icons.Filled.ConnectWithoutContact,
+                    Icons.Outlined.Sell,
                     contentDescription = "Localized description",
+                    tint = Color.Red
                 )
                 Text(
                     modifier = Modifier.padding(top = 35.dp, start = 10.dp),
@@ -180,7 +180,10 @@ fun BottomAppBar(navController: NavController) {
             }
 
             IconButton(onClick = { /* do something */ }) {
-                Icon(Icons.Filled.Bookmark, contentDescription = "Localized description")
+                Icon(Icons.Outlined.Bookmark,
+                    contentDescription = "Localized description",
+                    tint = Color.Blue
+                )
                 Text(
                     modifier = Modifier.padding(top = 35.dp, start = 10.dp),
                     text = "Bookmarks"
@@ -188,19 +191,20 @@ fun BottomAppBar(navController: NavController) {
             }
             IconButton(onClick = { /* do something */ }) {
                 Icon(
-                    Icons.Rounded.AddAlert,
-                    contentDescription = "Notifications",
+                    Icons.Rounded.PeopleOutline,
+                    contentDescription = "Communities",
+                    tint = Color.Red
                 )
                 Text(
                     modifier = Modifier.padding(top = 35.dp, start = 10.dp),
-                    text = "Notifications"
+                    text = "Communities"
                 )
             }
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* do something */ },
-                contentColor = BottomAppBarDefaults.bottomAppBarFabColor,
+                onClick = { navController.navigate(Screens.PostBookScreen.route) },
+                contentColor = Color.Red,
                 elevation = FloatingActionButtonDefaults.elevation()
             ) {
                 Icon(Icons.Filled.Add, "Localized description")
@@ -214,7 +218,7 @@ fun BottomAppBar(navController: NavController) {
 fun BooksList(
     books: List<BookResponseItem>,
     navigationRoute: String,
-    onBookClicked: (bookId: Int?) -> Unit
+    onBookClicked: (bookId: Int?) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -222,8 +226,11 @@ fun BooksList(
             .padding(2.dp)
     ) {
         LazyColumn(contentPadding = PaddingValues(2.dp)) {
-            items(books) { item ->
-                bookItem(item, navigationRoute, onBookClicked(item.bookId))
+            items(books) { bookItem ->
+                bookItem(
+                    bookItem,
+                    navigationRoute,
+                    onBookClicked = { id -> onBookClicked(bookItem.bookId) })
             }
         }
     }

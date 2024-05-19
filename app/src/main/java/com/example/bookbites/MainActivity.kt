@@ -10,7 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.example.bookbites.ui.components.book.BookDetails
+import com.example.bookbites.ui.components.book.BookPost
+import com.example.bookbites.ui.components.book.Books
 import com.example.bookbites.ui.theme.BookBitesTheme
 import com.example.navigation.AppNavigation
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,9 +29,10 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.onTertiary
+
                 ) {
-//                    AppNavigation()
-                    BookDetails()
+                    AppNavigation()
+
                 }
             }
         }

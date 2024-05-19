@@ -6,8 +6,10 @@ import com.example.bookbites.api.BookBitesApi
 import com.example.bookbites.model.User.UserDetailsResponse
 import com.example.bookbites.model.authentication.AuthResponse
 import com.example.bookbites.model.bid.sentBids.SentBid
+import com.example.bookbites.model.books.Book
 import com.example.bookbites.model.books.BookResponse
 import com.example.bookbites.model.books.BooksResponse
+import com.example.bookbites.model.books.PostBookResponse
 import com.example.bookbites.model.books.bookDetails.BookDetailsResponse
 import com.example.bookbites.model.categories.all_categories.CategoriesResponse
 import com.example.bookbites.model.categories.books_categories.CategoryBooksResponse
@@ -48,7 +50,18 @@ class BookBitesRepoImpl @Inject constructor(val api: BookBitesApi) : BookBitesRe
     }
 
     override suspend fun getBookById(id: Int): Resource<BookDetailsResponse> {
-        TODO("Not yet implemented")
+        return api.getBookById(id)
+    }
+
+    override suspend fun postBook(
+        title: String,
+        author: String,
+        page: Int,
+        category: String,
+        summary: String,
+        isAvailable: Boolean
+    ): Resource<String> {
+        return api.postBook(title,author,page,category,summary,isAvailable)
     }
 
 }

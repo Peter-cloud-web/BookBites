@@ -1,5 +1,6 @@
-package com.example.bookbites.ui.components
+package com.example.bookbites.ui.components.auth
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -19,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,19 +35,24 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.bookbites.R
-import com.example.bookbites.ui.viewmodels.RegistationViewModel
+import com.example.bookbites.ui.uistates.LoginStates
+import com.example.bookbites.ui.viewmodels.LoginViewModel
+import com.example.navigation.AppNavigation
+import com.example.navigation.Screens
 
 @Composable
-fun Register() {
-    var email by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+fun Login(navController: NavController) {
 
-    var registerViewModel: RegistationViewModel = hiltViewModel()
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var loginViewModel: LoginViewModel = hiltViewModel()
 
     Column(
         modifier = Modifier.padding(10.dp),
@@ -66,7 +74,6 @@ fun Register() {
                 fontSize = 30.sp
             )
         )
-
         Spacer(modifier = Modifier.height(5.dp))
 
         Text(
@@ -98,7 +105,6 @@ fun Register() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val context = LocalContext.current
             OutlinedTextField(
                 value = email,
                 onValueChange = {
@@ -108,16 +114,7 @@ fun Register() {
             )
 
             Spacer(modifier = Modifier.height(10.dp))
-
-            OutlinedTextField(
-                value = username,
-                onValueChange = {
-                    username = it
-                },
-                label = { Text("Username") }
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
+            val context = LocalContext.current
 
             OutlinedTextField(
                 value = password,
@@ -127,12 +124,30 @@ fun Register() {
                 label = { Text("Password") }
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(30.dp))
+
             Button(
                 onClick = {
-                    registerViewModel.registerUser(email, username, password)
-                    Toast.makeText(context, "User registered", Toast.LENGTH_SHORT).show()
+                    loginViewModel.LoginUser(email, password)
+                    navController.navigate(Screens.HomeScreen.route)
+                    Toast.makeText(context, "Successfully logged in", Toast.LENGTH_SHORT).show()
                 },
+                colors = ButtonDefaults.buttonColors(Color.Red),
+                modifier = Modifier.width(300.dp).height(50.dp)
+            ) {
+                Text(
+                    "Login",
+                    style = TextStyle(
+                        fontFamily = FontFamily.SansSerif,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 20.sp,
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+            Button(
+                onClick = {},
                 colors = ButtonDefaults.buttonColors(Color.Black),
                 modifier = Modifier.width(300.dp).height(50.dp)
             ) {
@@ -149,8 +164,8 @@ fun Register() {
             Spacer(modifier = Modifier.height(50.dp))
 
             ClickableText(
-                text = AnnotatedString("Already have an account? Login"),
-                onClick = {  },
+                text = AnnotatedString("Forgot password"),
+                onClick = {},
                 style = TextStyle(
                     color = Color.Blue,
                     fontFamily = FontFamily.Serif,
@@ -158,12 +173,10 @@ fun Register() {
                     fontSize = 15.sp,
 
                     )
-
             )
+
         }
 
     }
 
 }
-
-

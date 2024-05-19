@@ -7,6 +7,6 @@ import com.example.bookbites.model.books.BookResponseItem
 import com.example.bookbites.ui.components.book.Books
 
 @Composable
-fun HomeScreen(navController: NavController,onBookClicked:(bookId:Int) -> Unit){
-    Books(navController, onBookClicked = onBookClicked)
+fun HomeScreen(navController: NavController,onBookClicked:(bookId:Int?) -> Unit){
+    Books(navController,onBookClicked)
 }

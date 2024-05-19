@@ -7,8 +7,10 @@ import com.example.bookbites.model.authentication.AuthResponse
 import com.example.bookbites.model.authentication.Login
 import com.example.bookbites.model.authentication.Register
 import com.example.bookbites.model.bid.sentBids.SentBid
+import com.example.bookbites.model.books.Book
 import com.example.bookbites.model.books.BookResponse
 import com.example.bookbites.model.books.BookResponseItem
+import com.example.bookbites.model.books.PostBookResponse
 import com.example.bookbites.model.books.bookDetails.BookDetailsResponse
 import com.example.bookbites.model.categories.all_categories.CategoriesResponse
 import com.example.bookbites.model.categories.books_categories.CategoryBooksResponse
@@ -97,6 +99,56 @@ class BookBitesApi @Inject constructor(
         } catch (e: HttpException) {
             Resource.Error(null, e.localizedMessage ?: "Network error")
         }
+    }
+
+    suspend fun postBook(
+        title: String,
+        author: String,
+        page: Int,
+        category: String,
+        summary: String,
+        isAvailable: Boolean
+    ): Resource<String> {
+
+        return try {
+            val token = sessionManager.getToken.firstOrNull()
+            if (token != null) {
+                Resource.Loading(null)
+                val response = httpClient.post<PostBookResponse>() {
+                    url {
+                        protocol = URLProtocol.HTTP
+                        host = Constants.BOOKBITES_API
+                        encodedPath = Constants.CREATE_BOOK_POST
+                    }
+                    header(HttpHeaders.Authorization, "Bearer $token")
+                    contentType(ContentType.Application.Json)
+                    body = Book(
+                        author = author,
+                        category = category,
+                        isAvailable = isAvailable,
+                        page = page,
+                        summary = summary,
+                        title = title
+                    )
+                }
+                if (response != null) {
+                    Resource.Success(response.message)
+                } else {
+                    Resource.Error(data = "null", message = "No value found")
+                }
+
+            } else {
+                Resource.Error(null, "Token not found")
+            }
+
+        } catch (e: Exception) {
+            Resource.Error(null, e.localizedMessage ?: "An unexpected error occurred")
+        } catch (e: IOException) {
+            Resource.Error(null, e.localizedMessage ?: "Network server error")
+        } catch (e: HttpException) {
+            Resource.Error(null, e.localizedMessage ?: "Network error")
+        }
+
     }
 
     suspend fun allCategories(): Resource<CategoriesResponse> {

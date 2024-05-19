@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.network.HttpException
-import com.example.bookbites.model.books.BooksResponse
 import com.example.bookbites.repository.BookBitesRepo
 import com.example.bookbites.ui.uistates.BookStates
 import com.example.util.Resource
@@ -29,7 +28,7 @@ class BooksViewModel @Inject constructor(private val bookBitesRepo: BookBitesRep
         try {
             viewModelScope.launch {
                 val booksData = bookBitesRepo.getBooks()
-                Log.d("BOOKSVIEWMODEL","${booksData.data}")
+                Log.d("BOOKSVIEWMODEL", "${booksData.data}")
                 _books.value = when (booksData) {
                     is Resource.Loading -> BookStates(isLoading = true)
                     is Resource.Success -> BookStates(isSuccess = booksData.data)
@@ -49,4 +48,26 @@ class BooksViewModel @Inject constructor(private val bookBitesRepo: BookBitesRep
         }
     }
 
+    fun postBook(
+        title: String,
+        author: String,
+        page: Int,
+        category: String,
+        summary: String,
+        isAvailable: Boolean
+    ) {
+        try {
+            viewModelScope.launch {
+                Resource.Loading(null)
+                val message =
+                    bookBitesRepo.postBook(title, author, page, category, summary, isAvailable)
+                Log.d("BOOKS_VIEWMODEL","${message.message}")
+                Resource.Success(message)
+            }
+        } catch (e: Exception) {
+            Resource.Error(null, e.localizedMessage)
+        }
+    }
+
 }
+
