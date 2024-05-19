@@ -1,5 +1,8 @@
 package com.example.bookbites.model.bid.receivedBid
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class BiddedBook(
     val author: String,
     val category: String,

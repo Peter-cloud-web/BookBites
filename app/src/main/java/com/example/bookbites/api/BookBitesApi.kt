@@ -6,7 +6,10 @@ import com.example.bookbites.model.User.UserDetailsResponseItem
 import com.example.bookbites.model.authentication.AuthResponse
 import com.example.bookbites.model.authentication.Login
 import com.example.bookbites.model.authentication.Register
+import com.example.bookbites.model.bid.receivedBid.ReceivedBid
+import com.example.bookbites.model.bid.receivedBid.ReceivedBidItem
 import com.example.bookbites.model.bid.sentBids.SentBid
+import com.example.bookbites.model.bid.sentBids.SentBidItem
 import com.example.bookbites.model.books.Book
 import com.example.bookbites.model.books.BookResponse
 import com.example.bookbites.model.books.BookResponseItem
@@ -201,15 +204,14 @@ class BookBitesApi @Inject constructor(
     suspend fun getSentBids(): Resource<SentBid> {
         return try {
             Resource.Loading(null)
-            val sentBids = httpClient.get<SentBid>() {
+            val sentBids = httpClient.get<List<SentBidItem>>() {
                 url {
                     protocol = URLProtocol.HTTP
                     host = Constants.BOOKBITES_API
                     encodedPath = Constants.SENT_BIDS
-
                 }
             }
-            Resource.Success(sentBids)
+            Resource.Success(SentBid(sentBids))
         } catch (e: Exception) {
             Resource.Error(null, e.localizedMessage ?: "A unexpected error occurred")
         } catch (e: IOException) {
@@ -305,7 +307,26 @@ class BookBitesApi @Inject constructor(
 
     suspend fun searchBooksByName() {}
 
-    suspend fun getReceivedBids() {}
+    suspend fun getReceivedBids():Resource<ReceivedBid> {
+        return try{
+            Resource.Loading(null)
+            val receivedBids = httpClient.get<List<ReceivedBidItem>>{
+                url{
+                    protocol = URLProtocol.HTTP
+                    host = Constants.BOOKBITES_API
+                    encodedPath = Constants.RECEIVED_BIDS
+                }
+            }
+            Resource.Success(ReceivedBid(receivedBids))
+        }catch (e: Exception) {
+            Resource.Error(null, e.localizedMessage ?: "A unexpected error occurred")
+        } catch (e: IOException) {
+            Resource.Error(null, e.localizedMessage ?: "Network server error")
+        } catch (e: HttpException) {
+            Resource.Error(null, e.localizedMessage ?: "Network error")
+        }
+    }
+
 
     suspend fun waitingList() {}
 

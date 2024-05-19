@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.bookbites.ui.components.book.BookDetails
 import com.example.bookbites.ui.components.book.BookPost
 import com.example.bookbites.ui.components.book.Books
+import com.example.bookbites.ui.sceens.BidsScreen
 import com.example.bookbites.ui.theme.BookBitesTheme
 import com.example.navigation.AppNavigation
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,7 +32,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onTertiary
 
                 ) {
-                    AppNavigation()
+//                    AppNavigation()
+                    BidsScreen()
 
                 }
             }

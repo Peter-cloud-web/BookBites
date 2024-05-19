@@ -2,6 +2,7 @@ package com.example.bookbites.repository
 
 import com.example.bookbites.model.User.UserDetailsResponse
 import com.example.bookbites.model.authentication.AuthResponse
+import com.example.bookbites.model.bid.receivedBid.ReceivedBid
 import com.example.bookbites.model.bid.sentBids.SentBid
 import com.example.bookbites.model.books.Book
 import com.example.bookbites.model.books.BookResponse
@@ -19,6 +20,7 @@ interface BookBitesRepo {
     suspend fun getAllCategories():Resource<CategoriesResponse>
     suspend fun getBooksByCategories(category:String):Resource<CategoryBooksResponse>
     suspend fun getSentBids():Resource<SentBid>
+    suspend fun getReceivedBids():Resource<ReceivedBid>
     suspend fun getLoggedUser():Resource<UserDetailsResponse>
     suspend fun getBooks():Resource<BookResponse>
     suspend fun getBookById(id:Int):Resource<BookDetailsResponse>

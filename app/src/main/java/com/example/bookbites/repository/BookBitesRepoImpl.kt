@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.bookbites.api.BookBitesApi
 import com.example.bookbites.model.User.UserDetailsResponse
 import com.example.bookbites.model.authentication.AuthResponse
+import com.example.bookbites.model.bid.receivedBid.ReceivedBid
 import com.example.bookbites.model.bid.sentBids.SentBid
 import com.example.bookbites.model.books.Book
 import com.example.bookbites.model.books.BookResponse
@@ -39,6 +40,10 @@ class BookBitesRepoImpl @Inject constructor(val api: BookBitesApi) : BookBitesRe
 
     override suspend fun getSentBids(): Resource<SentBid> {
         return api.getSentBids()
+    }
+
+    override suspend fun getReceivedBids(): Resource<ReceivedBid> {
+        return api.getReceivedBids()
     }
 
     override suspend fun getLoggedUser(): Resource<UserDetailsResponse> {

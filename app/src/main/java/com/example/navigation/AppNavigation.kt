@@ -53,7 +53,7 @@ fun AppNavigation() {
         }
 
         composable(Screens.BidsScreen.route) {
-            BidsScreen(navController)
+            BidsScreen()
         }
 
         composable(Screens.SentBids.route) {

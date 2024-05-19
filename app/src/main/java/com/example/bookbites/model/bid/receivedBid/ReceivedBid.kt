@@ -1,3 +1,8 @@
 package com.example.bookbites.model.bid.receivedBid
 
-class ReceivedBid : ArrayList<ReceivedBidItem>()
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class ReceivedBid(
+    val receivedBids: List<ReceivedBidItem>
+)
