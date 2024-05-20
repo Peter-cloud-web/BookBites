@@ -6,11 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.bookbites.api.BookBitesApi
 import com.example.bookbites.ui.uistates.ReceivedBidsUIState
 import com.example.util.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class ReceivedBidsViewModel @Inject constructor(private val bitesApi: BookBitesApi):ViewModel(){
 
     val _receivedBids = MutableStateFlow(ReceivedBidsUIState())

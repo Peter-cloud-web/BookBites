@@ -6,11 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.bookbites.api.BookBitesApi
 import com.example.bookbites.ui.uistates.SentBidsUIState
 import com.example.util.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
+@HiltViewModel
 class SentBidsViewModel @Inject constructor(private val bookBitesApi: BookBitesApi) : ViewModel() {
 
     private val _sentBids = MutableStateFlow(SentBidsUIState())

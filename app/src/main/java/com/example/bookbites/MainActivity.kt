@@ -32,8 +32,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onTertiary
 
                 ) {
-//                    AppNavigation()
-                    BidsScreen()
+                    AppNavigation()
+//                    BidsScreen()
 
                 }
             }

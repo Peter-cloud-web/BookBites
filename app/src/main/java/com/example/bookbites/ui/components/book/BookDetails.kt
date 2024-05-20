@@ -42,12 +42,16 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bookbites.R
 import com.example.bookbites.ui.viewmodels.BookDetailsViewModel
+import com.example.bookbites.ui.viewmodels.ReceivedBidsViewModel
+import com.example.bookbites.ui.viewmodels.SentBidsViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 
 @Composable
 fun BookDetails(bookId: Int) {
     val viewModel: BookDetailsViewModel = hiltViewModel()
+    val sentBidsViewModel:SentBidsViewModel = hiltViewModel()
+    val receivedBidsViewModel:ReceivedBidsViewModel = hiltViewModel()
     val bookDetail by viewModel.bookDetail.collectAsState()
 
 
@@ -331,7 +335,7 @@ fun BookDetails(bookId: Int) {
 
             Button(
                 onClick = {
-
+                   sentBidsViewModel.getSentBids()
                 },
                 colors = ButtonDefaults.buttonColors(Color.Red),
                 modifier = Modifier.fillMaxWidth().height(70.dp).padding(10.dp)

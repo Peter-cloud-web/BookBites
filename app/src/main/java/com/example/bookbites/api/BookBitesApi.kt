@@ -202,16 +202,25 @@ class BookBitesApi @Inject constructor(
     suspend fun bidForBook() {}
 
     suspend fun getSentBids(): Resource<SentBid> {
+
         return try {
-            Resource.Loading(null)
-            val sentBids = httpClient.get<List<SentBidItem>>() {
-                url {
-                    protocol = URLProtocol.HTTP
-                    host = Constants.BOOKBITES_API
-                    encodedPath = Constants.SENT_BIDS
+            val token = sessionManager.getToken.firstOrNull()
+
+            if (token != null) {
+
+                Resource.Loading(null)
+                val sentBids = httpClient.get<List<SentBidItem>>() {
+                    url {
+                        protocol = URLProtocol.HTTP
+                        host = Constants.BOOKBITES_API
+                        encodedPath = Constants.SENT_BIDS
+                    }
+                    header(HttpHeaders.Authorization, "Bearer $token")
                 }
+                Resource.Success(SentBid(sentBids))
+            } else {
+                Resource.Error(null, "Token not found")
             }
-            Resource.Success(SentBid(sentBids))
         } catch (e: Exception) {
             Resource.Error(null, e.localizedMessage ?: "A unexpected error occurred")
         } catch (e: IOException) {
@@ -307,18 +316,18 @@ class BookBitesApi @Inject constructor(
 
     suspend fun searchBooksByName() {}
 
-    suspend fun getReceivedBids():Resource<ReceivedBid> {
-        return try{
+    suspend fun getReceivedBids(): Resource<ReceivedBid> {
+        return try {
             Resource.Loading(null)
-            val receivedBids = httpClient.get<List<ReceivedBidItem>>{
-                url{
+            val receivedBids = httpClient.get<List<ReceivedBidItem>> {
+                url {
                     protocol = URLProtocol.HTTP
                     host = Constants.BOOKBITES_API
                     encodedPath = Constants.RECEIVED_BIDS
                 }
             }
             Resource.Success(ReceivedBid(receivedBids))
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             Resource.Error(null, e.localizedMessage ?: "A unexpected error occurred")
         } catch (e: IOException) {
             Resource.Error(null, e.localizedMessage ?: "Network server error")
