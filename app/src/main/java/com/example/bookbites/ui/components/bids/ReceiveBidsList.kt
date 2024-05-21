@@ -1,5 +1,6 @@
 package com.example.bookbites.ui.components.bids
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,9 +32,12 @@ fun ReceiveBidsList() {
                 CircularProgressIndicator()
             }
 
-            receiveBidsUiState.success!= null -> {
+            receiveBidsUiState.success != null -> {
                 receiveBidsUiState.success?.receivedBids.let { receiveBidsList ->
                     if (receiveBidsList != null) {
+
+
+                        Log.d("RECEIVED BIDS LIST","${receiveBidsList}")
 
                         Column(
                             modifier = Modifier.fillMaxSize().padding(20.dp),

@@ -318,15 +318,22 @@ class BookBitesApi @Inject constructor(
 
     suspend fun getReceivedBids(): Resource<ReceivedBid> {
         return try {
-            Resource.Loading(null)
-            val receivedBids = httpClient.get<List<ReceivedBidItem>> {
-                url {
-                    protocol = URLProtocol.HTTP
-                    host = Constants.BOOKBITES_API
-                    encodedPath = Constants.RECEIVED_BIDS
+            val token = sessionManager.getToken.firstOrNull()
+            if (token != null) {
+                Resource.Loading(null)
+                val receivedBids = httpClient.get<List<ReceivedBidItem>> {
+                    url {
+                        protocol = URLProtocol.HTTP
+                        host = Constants.BOOKBITES_API
+                        encodedPath = Constants.RECEIVED_BIDS
+                    }
+                    header(HttpHeaders.Authorization, "Bearer $token")
                 }
+                Resource.Success(ReceivedBid(receivedBids))
+            } else {
+                Resource.Error(null, "Token not found")
             }
-            Resource.Success(ReceivedBid(receivedBids))
+
         } catch (e: Exception) {
             Resource.Error(null, e.localizedMessage ?: "A unexpected error occurred")
         } catch (e: IOException) {

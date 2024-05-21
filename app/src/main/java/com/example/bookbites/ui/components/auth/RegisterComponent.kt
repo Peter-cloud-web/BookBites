@@ -150,7 +150,7 @@ fun Register() {
 
             ClickableText(
                 text = AnnotatedString("Already have an account? Login"),
-                onClick = {  },
+                onClick = { },
                 style = TextStyle(
                     color = Color.Blue,
                     fontFamily = FontFamily.Serif,

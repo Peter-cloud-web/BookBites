@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,8 +27,6 @@ import androidx.compose.ui.unit.sp
 import com.example.bookbites.R
 import com.example.bookbites.model.bid.sentBids.BiddedBook
 import com.example.bookbites.model.bid.sentBids.Book
-import java.text.SimpleDateFormat
-import java.util.Date
 
 @Composable
 fun BiddedBookItem(biddedBook: List<List<BiddedBook>>) {

@@ -49,7 +49,7 @@ fun ReceiveBiddedBookItem(biddedBook: List<List<BiddedBook>>) {
 
             Text(
                 modifier = Modifier.padding(start = 18.dp, top = 10.dp),
-                text = "Bidded for this Book",
+                text = "Bidded Book",
                 style = TextStyle(
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold,
