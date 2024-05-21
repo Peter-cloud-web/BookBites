@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -26,13 +25,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bookbites.R
-import com.example.bookbites.model.bid.sentBids.BiddedBook
-import com.example.bookbites.model.bid.sentBids.Book
-import java.text.SimpleDateFormat
-import java.util.Date
+import com.example.bookbites.model.bid.receivedBid.BiddedBook
+import com.example.bookbites.model.bid.receivedBid.Book
+
 
 @Composable
-fun BiddedBookItem(biddedBook: List<List<BiddedBook>>) {
+fun ReceiveBiddedBookItem(biddedBook: List<List<BiddedBook>>) {
     Card(
         modifier = Modifier
             .padding(10.dp)
@@ -51,7 +49,7 @@ fun BiddedBookItem(biddedBook: List<List<BiddedBook>>) {
 
             Text(
                 modifier = Modifier.padding(start = 18.dp, top = 10.dp),
-                text = "Bidded Book",
+                text = "Bidded for this Book",
                 style = TextStyle(
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold,
@@ -218,7 +216,7 @@ fun BiddedBookItem(biddedBook: List<List<BiddedBook>>) {
 
 
 @Composable
-fun BidderBook(book: List<Book>) {
+fun ReceiveBidderBook(book: List<Book>) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -237,7 +235,7 @@ fun BidderBook(book: List<Book>) {
 
             Text(
                 modifier = Modifier.padding(start = 18.dp, top = 10.dp),
-                text = "Sent Bid",
+                text = "Received Bid",
                 style = TextStyle(
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold,
