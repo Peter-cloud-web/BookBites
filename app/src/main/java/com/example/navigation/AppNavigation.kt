@@ -7,7 +7,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.bookbites.model.bid.sentBids.BiddedBook
+import com.example.bookbites.model.bid.sentBids.Book
 import com.example.bookbites.ui.components.book.BookDetails
+import com.example.bookbites.ui.sceens.AcceptedBidsScreen
 import com.example.bookbites.ui.sceens.BidsScreen
 import com.example.bookbites.ui.sceens.HomeScreen
 import com.example.bookbites.ui.sceens.LoginScreen
@@ -62,6 +65,10 @@ fun AppNavigation() {
 
         composable(Screens.ReceivedBids.route) {
             ReceivedBidsScreen()
+        }
+
+        composable(Screens.AcceptedBids.route) {
+            AcceptedBidsScreen()
         }
 
         composable(Screens.PostBookScreen.route){
