@@ -29,7 +29,7 @@ import com.example.bookbites.model.bid.sentBids.BiddedBook
 import com.example.bookbites.model.bid.sentBids.Book
 
 @Composable
-fun BiddedBookItem(biddedBook: List<List<BiddedBook>>) {
+fun BiddedBookItem(biddedBook: BiddedBook) {
     Card(
         modifier = Modifier
             .padding(10.dp)
@@ -107,19 +107,17 @@ fun BiddedBookItem(biddedBook: List<List<BiddedBook>>) {
                     )
                 )
 
-                biddedBook.map { biddedBookList ->
-                    biddedBookList.map { biddedBook ->
-                        Text(
-                            modifier = Modifier.padding(start = 5.dp, top = 10.dp),
-                            text = biddedBook.title.toString(),
-                            style = TextStyle(
-                                color = Color.Black,
-                                fontFamily = FontFamily.Serif,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 11.sp
-                            )
+                biddedBook.title.let {
+                    Text(
+                        modifier = Modifier.padding(start = 5.dp, top = 10.dp),
+                        text = it.toString(),
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 11.sp
                         )
-                    }
+                    )
                 }
             }
 
@@ -135,19 +133,17 @@ fun BiddedBookItem(biddedBook: List<List<BiddedBook>>) {
                         fontSize = 11.sp
                     )
                 )
-                biddedBook.map { biddedBookList ->
-                    biddedBookList.map { biddedBook ->
-                        Text(
-                            modifier = Modifier.padding(start = 5.dp, top = 10.dp),
-                            text = biddedBook.author.toString(),
-                            style = TextStyle(
-                                color = Color.Black,
-                                fontFamily = FontFamily.Serif,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 11.sp
-                            )
+                biddedBook.author.let {
+                    Text(
+                        modifier = Modifier.padding(start = 5.dp, top = 10.dp),
+                        text = it.toString(),
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 11.sp
                         )
-                    }
+                    )
                 }
             }
 
@@ -165,19 +161,17 @@ fun BiddedBookItem(biddedBook: List<List<BiddedBook>>) {
                 )
             )
 
-            biddedBook.map { biddedBookList ->
-                biddedBookList.map { biddedBook ->
-                    Text(
-                        modifier = Modifier.padding(start = 5.dp, top = 10.dp),
-                        text = biddedBook.category.toString(),
-                        style = TextStyle(
-                            color = Color.Black,
-                            fontFamily = FontFamily.Serif,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp
-                        )
+            biddedBook.category.let {
+                Text(
+                    modifier = Modifier.padding(start = 5.dp, top = 10.dp),
+                    text = it.toString(),
+                    style = TextStyle(
+                        color = Color.Black,
+                        fontFamily = FontFamily.Serif,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 11.sp
                     )
-                }
+                )
             }
         }
 
@@ -195,19 +189,17 @@ fun BiddedBookItem(biddedBook: List<List<BiddedBook>>) {
             )
 
 
-            biddedBook.map { biddedBookList ->
-                biddedBookList.map { biddedBook ->
-                    Text(
-                        modifier = Modifier.padding(start = 5.dp, top = 10.dp),
-                        text = biddedBook.summary.toString(),
-                        style = TextStyle(
-                            color = Color.Black,
-                            fontFamily = FontFamily.Serif,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp
-                        )
+            biddedBook.summary.let {
+                Text(
+                    modifier = Modifier.padding(start = 5.dp, top = 10.dp, bottom = 10.dp),
+                    text = biddedBook.summary.toString(),
+                    style = TextStyle(
+                        color = Color.Black,
+                        fontFamily = FontFamily.Serif,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 11.sp
                     )
-                }
+                )
             }
         }
     }
@@ -215,7 +207,7 @@ fun BiddedBookItem(biddedBook: List<List<BiddedBook>>) {
 
 
 @Composable
-fun BidderBook(book: List<Book>) {
+fun BidderBook(book: Book) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -292,10 +284,10 @@ fun BidderBook(book: List<Book>) {
                     )
                 )
 
-                book.map {
+                book.title.let {
                     Text(
                         modifier = Modifier.padding(start = 5.dp, top = 10.dp),
-                        text = it.title.toString(),
+                        text = it.toString(),
                         style = TextStyle(
                             color = Color.Black,
                             fontFamily = FontFamily.Serif,
@@ -319,10 +311,10 @@ fun BidderBook(book: List<Book>) {
                     )
                 )
 
-                book.map {
+                book.author.let {
                     Text(
                         modifier = Modifier.padding(start = 3.dp, top = 10.dp),
-                        text = it.author.toString(),
+                        text = it.toString(),
                         style = TextStyle(
                             color = Color.Black,
                             fontFamily = FontFamily.Serif,
@@ -346,11 +338,10 @@ fun BidderBook(book: List<Book>) {
                     fontSize = 11.sp
                 )
             )
-            book.map {
-
+            book.pages.let{
                 Text(
                     modifier = Modifier.padding(start = 3.dp, top = 10.dp),
-                    text = it.title.toString(),
+                    text = it.toString(),
                     style = TextStyle(
                         color = Color.Black,
                         fontFamily = FontFamily.Serif,
@@ -374,10 +365,10 @@ fun BidderBook(book: List<Book>) {
                 )
             )
 
-            book.map {
+            book.summary.let {
                 Text(
                     modifier = Modifier.padding(start = 3.dp, top = 10.dp, bottom = 10.dp),
-                    text = it.summary.toString(),
+                    text = it.toString(),
                     style = TextStyle(
                         color = Color.Black,
                         fontFamily = FontFamily.Serif,

@@ -33,21 +33,24 @@ fun SentBidsList() {
             sentBidsUiState.isSuccess != null -> {
                 sentBidsUiState.isSuccess?.sentBids.let { sentBidsList ->
                     if (sentBidsList != null) {
-
-                        Column(
-                            modifier = Modifier.fillMaxSize().padding(20.dp),
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(20.dp),
+                            contentPadding = PaddingValues(vertical = 8.dp)
                         ) {
-                            BidsList(
-                                sentBidsList.map {
-                                    it.biddedBook
-                                }
-                            )
+                            items(sentBidsList) { sentBidItem ->
+                                Column {
+                                    sentBidItem.biddedBook.forEach { biddedBook ->
+                                        BiddedBookItem(biddedBook)
+                                    }
 
-                            BidBooksList(
-                                sentBidsList.map {
-                                    it.book
+                                    sentBidItem.book.forEach { book ->
+                                        BidderBook(book)
+                                    }
+
                                 }
-                            )
+                            }
                         }
                     }
                 }
@@ -60,33 +63,4 @@ fun SentBidsList() {
 
     }
 
-}
-
-
-@Composable
-fun BidsList(biddedBook: List<List<BiddedBook>>) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(2.dp)
-    ) {
-        LazyColumn(contentPadding = PaddingValues(2.dp)) {
-            items(biddedBook) {
-                it.map {
-                    BiddedBookItem(biddedBook)
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun BidBooksList(books: List<List<Book>>) {
-    Column(modifier = Modifier.fillMaxWidth().padding(2.dp)) {
-        LazyColumn(contentPadding = PaddingValues(2.dp)) {
-            items(books) { book ->
-                BidderBook(book)
-            }
-        }
-    }
 }

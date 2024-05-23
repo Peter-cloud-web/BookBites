@@ -1,15 +1,21 @@
 package com.example.bookbites.ui.components.bids
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -30,7 +37,7 @@ import com.example.bookbites.model.bid.receivedBid.Book
 
 
 @Composable
-fun ReceiveBiddedBookItem(biddedBook: List<List<BiddedBook>>) {
+fun ReceiveBiddedBookItem(biddedBook: BiddedBook) {
     Card(
         modifier = Modifier
             .padding(10.dp)
@@ -49,7 +56,7 @@ fun ReceiveBiddedBookItem(biddedBook: List<List<BiddedBook>>) {
 
             Text(
                 modifier = Modifier.padding(start = 18.dp, top = 10.dp),
-                text = "Bidded Book",
+                text = "Your Book",
                 style = TextStyle(
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold,
@@ -108,27 +115,37 @@ fun ReceiveBiddedBookItem(biddedBook: List<List<BiddedBook>>) {
                     )
                 )
 
-                biddedBook.map { biddedBookList ->
-                    biddedBookList.map { biddedBook ->
-                        Text(
-                            modifier = Modifier.padding(start = 5.dp, top = 10.dp),
-                            text = biddedBook.title.toString(),
-                            style = TextStyle(
-                                color = Color.Black,
-                                fontFamily = FontFamily.Serif,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 11.sp
-                            )
+                biddedBook.title.let { biddedBook ->
+                    Text(
+                        modifier = Modifier.padding(start = 5.dp, top = 10.dp),
+                        text = biddedBook.toString(),
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 11.sp
                         )
-                    }
+                    )
                 }
             }
+        }
 
 
-            Row {
+        Row {
+            Text(
+                modifier = Modifier.padding(start = 15.dp, top = 10.dp),
+                text = "Written by ",
+                style = TextStyle(
+                    color = Color.Black,
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 11.sp
+                )
+            )
+            biddedBook.let { biddedBook ->
                 Text(
-                    modifier = Modifier.padding(start = 15.dp, top = 10.dp),
-                    text = "Written by ",
+                    modifier = Modifier.padding(start = 5.dp, top = 10.dp),
+                    text = biddedBook.author.toString(),
                     style = TextStyle(
                         color = Color.Black,
                         fontFamily = FontFamily.Serif,
@@ -136,23 +153,9 @@ fun ReceiveBiddedBookItem(biddedBook: List<List<BiddedBook>>) {
                         fontSize = 11.sp
                     )
                 )
-                biddedBook.map { biddedBookList ->
-                    biddedBookList.map { biddedBook ->
-                        Text(
-                            modifier = Modifier.padding(start = 5.dp, top = 10.dp),
-                            text = biddedBook.author.toString(),
-                            style = TextStyle(
-                                color = Color.Black,
-                                fontFamily = FontFamily.Serif,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 11.sp
-                            )
-                        )
-                    }
-                }
             }
-
         }
+
 
         Row {
             Text(
@@ -166,21 +169,20 @@ fun ReceiveBiddedBookItem(biddedBook: List<List<BiddedBook>>) {
                 )
             )
 
-            biddedBook.map { biddedBookList ->
-                biddedBookList.map { biddedBook ->
-                    Text(
-                        modifier = Modifier.padding(start = 5.dp, top = 10.dp),
-                        text = biddedBook.category.toString(),
-                        style = TextStyle(
-                            color = Color.Black,
-                            fontFamily = FontFamily.Serif,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp
-                        )
+            biddedBook.let { biddedBook ->
+                Text(
+                    modifier = Modifier.padding(start = 5.dp, top = 10.dp),
+                    text = biddedBook.category.toString(),
+                    style = TextStyle(
+                        color = Color.Black,
+                        fontFamily = FontFamily.Serif,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 11.sp
                     )
-                }
+                )
             }
         }
+
 
 
         Row {
@@ -196,27 +198,26 @@ fun ReceiveBiddedBookItem(biddedBook: List<List<BiddedBook>>) {
             )
 
 
-            biddedBook.map { biddedBookList ->
-                biddedBookList.map { biddedBook ->
-                    Text(
-                        modifier = Modifier.padding(start = 5.dp, top = 10.dp),
-                        text = biddedBook.summary.toString(),
-                        style = TextStyle(
-                            color = Color.Black,
-                            fontFamily = FontFamily.Serif,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp
-                        )
+            biddedBook.let {
+                Text(
+                    modifier = Modifier.padding(start = 5.dp, top = 10.dp, bottom = 5.dp),
+                    text = it.summary.toString(),
+                    style = TextStyle(
+                        color = Color.Black,
+                        fontFamily = FontFamily.Serif,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 11.sp
                     )
-                }
+                )
             }
         }
     }
+
 }
 
 
 @Composable
-fun ReceiveBidderBook(book: List<Book>) {
+fun ReceiveBidderBook(book: Book) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -269,7 +270,7 @@ fun ReceiveBidderBook(book: List<Book>) {
                     )
 
                     Text(
-                        modifier = Modifier.padding(start = 15.dp, top = 8.dp),
+                        modifier = Modifier.padding(start = 15.dp, top = 5.dp),
                         text = "",
                         style = TextStyle(
                             color = Color.Black,
@@ -293,10 +294,10 @@ fun ReceiveBidderBook(book: List<Book>) {
                     )
                 )
 
-                book.map {
+                book.title.let {
                     Text(
                         modifier = Modifier.padding(start = 5.dp, top = 10.dp),
-                        text = it.title.toString(),
+                        text = it.toString(),
                         style = TextStyle(
                             color = Color.Black,
                             fontFamily = FontFamily.Serif,
@@ -320,10 +321,10 @@ fun ReceiveBidderBook(book: List<Book>) {
                     )
                 )
 
-                book.map {
+                book.author.let {
                     Text(
                         modifier = Modifier.padding(start = 3.dp, top = 10.dp),
-                        text = it.author.toString(),
+                        text = it,
                         style = TextStyle(
                             color = Color.Black,
                             fontFamily = FontFamily.Serif,
@@ -334,24 +335,11 @@ fun ReceiveBidderBook(book: List<Book>) {
                 }
             }
 
-        }
 
-        Row {
-            Text(
-                modifier = Modifier.padding(start = 15.dp, top = 10.dp),
-                text = "Pages : ",
-                style = TextStyle(
-                    color = Color.Black,
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 11.sp
-                )
-            )
-            book.map {
-
+            Row {
                 Text(
-                    modifier = Modifier.padding(start = 3.dp, top = 10.dp),
-                    text = it.title.toString(),
+                    modifier = Modifier.padding(start = 15.dp, top = 10.dp),
+                    text = "Pages : ",
                     style = TextStyle(
                         color = Color.Black,
                         fontFamily = FontFamily.Serif,
@@ -359,26 +347,25 @@ fun ReceiveBidderBook(book: List<Book>) {
                         fontSize = 11.sp
                     )
                 )
+                book.pages.let {
+                    Text(
+                        modifier = Modifier.padding(start = 3.dp, top = 10.dp),
+                        text = it.toString(),
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 11.sp
+                        )
+                    )
+                }
             }
-        }
 
-        Row {
+            Row {
 
-            Text(
-                modifier = Modifier.padding(start = 15.dp, top = 10.dp),
-                text = "Summary : ",
-                style = TextStyle(
-                    color = Color.Black,
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 11.sp
-                )
-            )
-
-            book.map {
                 Text(
-                    modifier = Modifier.padding(start = 3.dp, top = 10.dp, bottom = 10.dp),
-                    text = it.summary.toString(),
+                    modifier = Modifier.padding(start = 15.dp, top = 10.dp),
+                    text = "Summary : ",
                     style = TextStyle(
                         color = Color.Black,
                         fontFamily = FontFamily.Serif,
@@ -386,7 +373,40 @@ fun ReceiveBidderBook(book: List<Book>) {
                         fontSize = 11.sp
                     )
                 )
+
+                book.summary.let {
+                    Text(
+                        modifier = Modifier.padding(start = 3.dp, top = 10.dp, bottom = 10.dp),
+                        text = it.toString(),
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 11.sp
+                        )
+                    )
+                }
             }
+
+            Button(
+                onClick = {
+                },
+                colors = ButtonDefaults.buttonColors(Color.Green),
+                modifier = Modifier.width(130.dp).height(30.dp).padding(top = 3.dp,start = 10.dp)
+
+                ) {
+                androidx.compose.material3.Text(
+                    "Accept Bid",
+                    style = TextStyle(
+                        fontFamily = FontFamily.SansSerif,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 12.sp,
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.padding(10.dp))
+
         }
 
     }

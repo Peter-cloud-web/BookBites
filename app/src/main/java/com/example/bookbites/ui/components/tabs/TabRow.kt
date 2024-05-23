@@ -62,7 +62,7 @@ fun TabScreen() {
         when (tabIndex) {
             0 -> SentBidsScreen()
             1 -> ReceivedBidsScreen()
-            3 -> AcceptedBidsScreen()
+            2 -> AcceptedBidsScreen()
         }
     }
 }

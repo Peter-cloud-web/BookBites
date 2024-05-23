@@ -1,6 +1,6 @@
 package com.example.bookbites.ui.components.bids
 
-import android.util.Log
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bookbites.model.bid.receivedBid.BiddedBook
@@ -19,79 +21,43 @@ import com.example.bookbites.model.bid.receivedBid.Book
 import com.example.bookbites.ui.viewmodels.ReceivedBidsViewModel
 
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun ReceiveBidsList() {
-
     val receiveBidsViewModel: ReceivedBidsViewModel = hiltViewModel()
-    val receivedBids = receiveBidsViewModel.receivedBids.collectAsState()
-
-    receivedBids.value.let { receiveBidsUiState ->
-
-        when {
-            receiveBidsUiState.isLoading -> {
-                CircularProgressIndicator()
-            }
-
-            receiveBidsUiState.success != null -> {
-                receiveBidsUiState.success?.receivedBids.let { receiveBidsList ->
-                    if (receiveBidsList != null) {
-
-
-                        Log.d("RECEIVED BIDS LIST","${receiveBidsList}")
-
-                        Column(
-                            modifier = Modifier.fillMaxSize().padding(20.dp),
-                        ) {
-                            ReceiveBidsList(
-                                receiveBidsList.map {
-                                    it.biddedBook
+    val receivedBidsState = receiveBidsViewModel.receivedBids.collectAsState().value
+    when {
+        receivedBidsState.isLoading -> {
+            CircularProgressIndicator()
+        }
+        receivedBidsState.success != null -> {
+            receivedBidsState.success?.receivedBids?.let { receiveBidsList ->
+                if (receiveBidsList.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(20.dp),
+                        contentPadding = PaddingValues(vertical = 8.dp)
+                    ) {
+                        items(receiveBidsList) { receivedBidItem ->
+                            Column {
+                                receivedBidItem.biddedBook.forEach { biddedBook ->
+                                    ReceiveBiddedBookItem(biddedBook)
                                 }
-                            )
 
-                            ReceiveBidBooksList(
-                                receiveBidsList.map {
-                                    it.book
+                                receivedBidItem.book.forEach { book ->
+                                    ReceiveBidderBook(book)
                                 }
-                            )
+
+                            }
                         }
                     }
                 }
             }
-
-            receiveBidsUiState.error != null -> "An Unexpected error occurred"
-
-            else -> {}
         }
-
-    }
-
-}
-
-
-@Composable
-fun ReceiveBidsList(biddedBook: List<List<BiddedBook>>) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(2.dp)
-    ) {
-        LazyColumn(contentPadding = PaddingValues(2.dp)) {
-            items(biddedBook) {
-                it.map {
-                    ReceiveBiddedBookItem(biddedBook)
-                }
-            }
+        receivedBidsState.error != null -> {
+            Text(text = receivedBidsState.error, color = Color.Red)
         }
-    }
-}
-
-@Composable
-fun ReceiveBidBooksList(books: List<List<Book>>) {
-    Column(modifier = Modifier.fillMaxWidth().padding(2.dp)) {
-        LazyColumn(contentPadding = PaddingValues(2.dp)) {
-            items(books) { book ->
-                ReceiveBidderBook(book)
-            }
-        }
+        else -> {}
     }
 }

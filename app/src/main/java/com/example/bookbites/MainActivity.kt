@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.bookbites.model.bid.receivedBid.ReceivedBid
-import com.example.bookbites.ui.components.bids.ReceiveBiddedBookItem
+import com.example.bookbites.ui.sceens.AcceptedBidsScreen
 import com.example.bookbites.ui.theme.BookBitesTheme
 import com.example.navigation.AppNavigation
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,8 +25,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onTertiary
 
                 ) {
-//                    AppNavigation()
-                    ReceiveBiddedBookItem()
+                    AppNavigation()
                 }
             }
         }

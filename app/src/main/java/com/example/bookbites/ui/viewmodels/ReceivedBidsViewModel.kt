@@ -13,29 +13,31 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ReceivedBidsViewModel @Inject constructor(private val bitesApi: BookBitesApi):ViewModel(){
+class ReceivedBidsViewModel @Inject constructor(private val bitesApi: BookBitesApi) : ViewModel() {
 
-    val _receivedBids = MutableStateFlow(ReceivedBidsUIState())
+    private val _receivedBids = MutableStateFlow(ReceivedBidsUIState())
     val receivedBids = _receivedBids.asStateFlow()
 
     init {
         getReceivedBids()
     }
 
-    fun getReceivedBids(){
+    fun getReceivedBids() {
         viewModelScope.launch {
             try {
+                _receivedBids.value = ReceivedBidsUIState(isLoading = true)
                 val receivedBidsResponse = bitesApi.getReceivedBids()
-                Log.d("RECEIVED BIDS","${receivedBidsResponse.data?.receivedBids}")
-                _receivedBids.value = when(receivedBidsResponse){
-                 is Resource.Loading -> ReceivedBidsUIState(isLoading = true)
-                 is Resource.Success -> ReceivedBidsUIState(success = receivedBidsResponse.data)
-                 is Resource.Error -> ReceivedBidsUIState(error("Unable to fetch received bids"))
+                Log.d("RECEIVED BIDS", "${receivedBidsResponse.data?.receivedBids}")
+                _receivedBids.value = when (receivedBidsResponse) {
+                    is Resource.Loading -> ReceivedBidsUIState(isLoading = true)
+                    is Resource.Success -> ReceivedBidsUIState(success = receivedBidsResponse.data)
+                    is Resource.Error -> ReceivedBidsUIState(error("Unable to fetch received bids"))
 
                 }
 
-            }catch (e:Exception){
-              _receivedBids.value = ReceivedBidsUIState(error = e.localizedMessage?:"Unexpected error occured")
+            } catch (e: Exception) {
+                _receivedBids.value =
+                    ReceivedBidsUIState(error = e.localizedMessage ?: "Unexpected error occured")
             }
         }
     }
