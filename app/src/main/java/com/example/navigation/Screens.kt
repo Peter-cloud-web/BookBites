@@ -1,6 +1,7 @@
 package com.example.navigation
 
 sealed class Screens(val route: String) {
+    object Splash : Screens("splash_screen")
     object LoginScreen : Screens("login")
     object Registration : Screens("registration")
     object HomeScreen : Screens("home")
@@ -10,4 +11,5 @@ sealed class Screens(val route: String) {
     object SentBids : Screens("sentBids")
     object AcceptedBids:Screens("AcceptedBids")
     object PostBookScreen:Screens("postBook")
+    object UserDetailsScreen:Screens("UserDetailsScreen")
 }

@@ -35,11 +35,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.bookbites.R
 import com.example.bookbites.ui.viewmodels.RegistationViewModel
+import com.example.navigation.Screens
 
 @Composable
-fun Register() {
+fun Register(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -50,6 +52,7 @@ fun Register() {
         modifier = Modifier.padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(30.dp))
         Image(
             modifier = Modifier.height(150.dp).width(150.dp),
             painter = painterResource(R.drawable.reading),
@@ -59,22 +62,11 @@ fun Register() {
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = "Welcome to BookBites",
+            text = "Register to BookBites",
             style = TextStyle(
-                fontFamily = FontFamily.Cursive,
+                fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.ExtraBold,
-                fontSize = 30.sp
-            )
-        )
-
-        Spacer(modifier = Modifier.height(5.dp))
-
-        Text(
-            text = "Share and exchange books conveniently",
-            style = TextStyle(
-                fontFamily = FontFamily.Cursive,
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 30.sp
+                fontSize = 40.sp
             )
         )
     }
@@ -150,7 +142,7 @@ fun Register() {
 
             ClickableText(
                 text = AnnotatedString("Already have an account? Login"),
-                onClick = { },
+                onClick = { navController.navigate(Screens.LoginScreen.route)},
                 style = TextStyle(
                     color = Color.Blue,
                     fontFamily = FontFamily.Serif,

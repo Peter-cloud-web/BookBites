@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bookbites.model.bid.receivedBid.BiddedBook
 import com.example.bookbites.model.bid.receivedBid.Book
 import com.example.bookbites.ui.viewmodels.ReceivedBidsViewModel
@@ -25,7 +26,7 @@ import com.example.bookbites.ui.viewmodels.ReceivedBidsViewModel
 @Composable
 fun ReceiveBidsList() {
     val receiveBidsViewModel: ReceivedBidsViewModel = hiltViewModel()
-    val receivedBidsState = receiveBidsViewModel.receivedBids.collectAsState().value
+    val receivedBidsState = receiveBidsViewModel.receivedBids.collectAsStateWithLifecycle().value
     when {
         receivedBidsState.isLoading -> {
             CircularProgressIndicator()

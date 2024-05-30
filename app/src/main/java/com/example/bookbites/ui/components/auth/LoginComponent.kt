@@ -32,6 +32,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,6 +40,7 @@ import androidx.navigation.NavController
 import com.example.bookbites.R
 import com.example.bookbites.ui.viewmodels.LoginViewModel
 import com.example.navigation.Screens
+import com.example.util.PasswordVisualTransformation
 
 @Composable
 fun Login(navController: NavController) {
@@ -46,35 +48,29 @@ fun Login(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var loginViewModel: LoginViewModel = hiltViewModel()
+    val applyVisualTransformation by remember { mutableStateOf(true) }
+
 
     Column(
-        modifier = Modifier.padding(10.dp),
+        modifier = Modifier.padding(30.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        Spacer(modifier = Modifier.height(10.dp))
         Image(
             modifier = Modifier.height(150.dp).width(150.dp),
             painter = painterResource(R.drawable.reading),
             contentDescription = null
         )
 
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Text(
-            text = "Welcome to BookBites",
-            style = TextStyle(
-                fontFamily = FontFamily.Cursive,
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 30.sp
-            )
-        )
         Spacer(modifier = Modifier.height(5.dp))
 
         Text(
-            text = "Share and exchange books conveniently",
+            text = "Login to BookBites",
             style = TextStyle(
-                fontFamily = FontFamily.Cursive,
+                fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.ExtraBold,
-                fontSize = 30.sp
+                fontSize = 40.sp
             )
         )
     }
@@ -114,7 +110,8 @@ fun Login(navController: NavController) {
                 onValueChange = {
                     password = it
                 },
-                label = { Text("Password") }
+                label = { Text("Password") },
+                visualTransformation =  if (applyVisualTransformation) PasswordVisualTransformation() else VisualTransformation.None
             )
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -140,7 +137,7 @@ fun Login(navController: NavController) {
 
             Spacer(modifier = Modifier.height(10.dp))
             Button(
-                onClick = {},
+                onClick = {navController.navigate(Screens.Registration.route)},
                 colors = ButtonDefaults.buttonColors(Color.Black),
                 modifier = Modifier.width(300.dp).height(50.dp)
             ) {

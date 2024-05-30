@@ -1,11 +1,14 @@
-package com.example.bookbites.ui.components.book
-
 import android.annotation.SuppressLint
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.AppBarDefaults
@@ -17,43 +20,96 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Sell
-import androidx.compose.material.icons.outlined.Bookmark
+import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.PeopleOutline
 import androidx.compose.material.icons.outlined.Sell
-import androidx.compose.material.icons.rounded.People
-import androidx.compose.material.icons.rounded.PeopleOutline
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.bookbites.model.books.BookResponseItem
+import com.example.bookbites.ui.components.book.bookItem
 import com.example.bookbites.ui.viewmodels.BooksViewModel
 import com.example.navigation.Screens
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Books(navController: NavController, onBookClicked: (bookId: Int?) -> Unit) {
+fun ToggleBottomNavButtons(
+    initialColor: Color = Color.DarkGray,
+    toggleColor: Color = Color.Black,
+    onToggleClick: () -> Unit,
+    onNavigationClick: () -> Unit,
+    initialIcon: ImageVector,
+    toggleIcon: ImageVector,
+    contentDescription: String? = null,
+    text: String = ""
+) {
+    var isToggled by remember { mutableStateOf(false) }
+    val tint by animateColorAsState(if (isToggled) toggleColor else initialColor)
+    val icon = if (isToggled) toggleIcon else initialIcon
 
+    Column(modifier = Modifier.padding(start = 20.dp)) {
+        IconButton(
+            onClick = {
+                isToggled = !isToggled
+                onToggleClick()
+                if (isToggled) {
+                    onNavigationClick()
+                }
+            },
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = contentDescription,
+                modifier = Modifier.size(20.dp),
+                tint = tint
+            )
+        }
+
+        Text(
+            modifier = Modifier.padding(top = 5.dp, start = 10.dp),
+            text = text
+        )
+
+    }
+
+
+}
+
+
+@Composable
+fun Books(
+    navController: NavController,
+) {
     val booksViewModel: BooksViewModel = hiltViewModel()
-    val books = booksViewModel.book.collectAsState()
+    val books = booksViewModel.book.collectAsStateWithLifecycle()
     Scaffold(
         topBar = { TopAppBar() },
         bottomBar = { BottomAppBar(navController) },
@@ -81,7 +137,11 @@ fun Books(navController: NavController, onBookClicked: (bookId: Int?) -> Unit) {
                                             navController.navigate("BookDetails/${bookId}")
                                         }
                                     },
-
+                                    onAvatarClicked = { email ->
+                                        if (email != null) {
+                                            navController.navigate("UserDetailsScreen/${email}")
+                                        }
+                                    }
                                 )
                             }
                         }
@@ -102,108 +162,124 @@ fun Books(navController: NavController, onBookClicked: (bookId: Int?) -> Unit) {
 @Composable
 fun TopAppBar() {
     MaterialTheme {
-        TopAppBar(
-            modifier = Modifier.height(100.dp),
-            title = {
-                Text(
-                    text = "BookBites",
-                    fontFamily = FontFamily.Cursive,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 30.sp
-                )
-            },
+        Column(modifier = Modifier.background(MaterialTheme.colorScheme.onTertiary)) {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "BookBites",
+                        fontFamily = FontFamily.Cursive,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 30.sp
+                    )
+                },
 
-            navigationIcon = {
-                IconButton(
-                    onClick = {},
-                ) {
-                    Icon(Icons.Filled.Menu, contentDescription = null)
-                }
-            },
+                modifier = Modifier.height(100.dp),
 
-            actions = {
-                IconButton(
-                    onClick = {},
-                ) {
-                    Icon(Icons.Default.FilterList, contentDescription = null, tint = Color.Black)
-
-                }
-
-                Column(
-
-                ) {
-
+                navigationIcon = {
                     IconButton(
-                        modifier = Modifier.padding(end = 20.dp),
                         onClick = {},
                     ) {
-                        Icon(Icons.Filled.AccountCircle, contentDescription = null)
+                        Icon(Icons.Filled.Menu, contentDescription = null)
                     }
-                }
+                },
 
-            },
-            backgroundColor = MaterialTheme.colorScheme.onTertiary,
-            elevation = AppBarDefaults.TopAppBarElevation,
+                actions = {
+                    IconButton(
+                        onClick = {},
+                    ) {
+                        Icon(
+                            Icons.Default.FilterList,
+                            contentDescription = null,
+                            tint = Color.Black
+                        )
 
+                    }
+
+                    IconButton(
+                        onClick = {},
+                    ) {
+                        Icon(
+                            Icons.Default.MyLocation,
+                            contentDescription = null,
+                            tint = Color.Black
+                        )
+
+                    }
+
+                    Column(
+
+                    ) {
+
+                        IconButton(
+                            modifier = Modifier.padding(end = 20.dp),
+                            onClick = {},
+                        ) {
+                            Icon(Icons.Filled.AccountCircle, contentDescription = null)
+                        }
+                    }
+
+                },
+                backgroundColor = MaterialTheme.colorScheme.onTertiary,
+                elevation = AppBarDefaults.TopAppBarElevation,
             )
+            FilterChips()
+        }
     }
 }
 
 @Composable
 fun BottomAppBar(navController: NavController) {
+
     BottomAppBar(
         actions = {
 
-            IconButton(
-                modifier = Modifier.padding(start = 35.dp),
-                onClick = { navController.navigate(Screens.HomeScreen.route) }) {
-                Icon(
-                    Icons.Outlined.Home,
-                    contentDescription = "Localized description",
-                    tint = Color.Red
-                )
-                Text(
-                    modifier = Modifier.padding(top = 35.dp, start = 10.dp),
-                    text = "Home"
-                )
-            }
-            IconButton(onClick = { navController.navigate(Screens.BidsScreen.route) }) {
-                Icon(
-                    Icons.Outlined.Sell,
-                    contentDescription = "Localized description",
-                    tint = Color.Red
-                )
-                Text(
-                    modifier = Modifier.padding(top = 35.dp, start = 10.dp),
-                    text = "Bids"
-                )
-            }
+            ToggleBottomNavButtons(
+                initialColor = Color.DarkGray,
+                toggleColor = Color.Red,
+                onToggleClick = {},
+                onNavigationClick = { navController.navigate(Screens.HomeScreen.route) },
+                initialIcon = Icons.Outlined.Home,
+                toggleIcon = Icons.Filled.Home,
+                contentDescription = null,
+                text = "Home"
+            )
 
-            IconButton(onClick = { /* do something */ }) {
-                Icon(Icons.Outlined.Bookmark,
-                    contentDescription = "Localized description",
-                    tint = Color.Blue
-                )
-                Text(
-                    modifier = Modifier.padding(top = 35.dp, start = 10.dp),
-                    text = "Bookmarks"
-                )
-            }
-            IconButton(onClick = { /* do something */ }) {
-                Icon(
-                    Icons.Rounded.PeopleOutline,
-                    contentDescription = "Communities",
-                    tint = Color.Red
-                )
-                Text(
-                    modifier = Modifier.padding(top = 35.dp, start = 10.dp),
-                    text = "Communities"
-                )
-            }
+            ToggleBottomNavButtons(
+                initialColor = Color.DarkGray,
+                toggleColor = Color.Red,
+                onToggleClick = {},
+                onNavigationClick = { navController.navigate(Screens.BidsScreen.route) },
+                initialIcon = Icons.Outlined.Sell,
+                toggleIcon = Icons.Filled.Sell,
+                contentDescription = null,
+                text = "Bids"
+            )
+            ToggleBottomNavButtons(
+                initialColor = Color.DarkGray,
+                toggleColor = Color.Red,
+                onToggleClick = {},
+                onNavigationClick = {},
+                initialIcon = Icons.Outlined.BookmarkBorder,
+                toggleIcon = Icons.Filled.Bookmark,
+                contentDescription = null,
+                text = "Bookmarks"
+            )
+
+            ToggleBottomNavButtons(
+                initialColor = Color.DarkGray,
+                toggleColor = Color.Red,
+                onToggleClick = {},
+                onNavigationClick = {},
+                initialIcon = Icons.Outlined.PeopleOutline,
+                toggleIcon = Icons.Filled.People,
+                contentDescription = null,
+                text = "Communities"
+            )
+
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { navController.navigate(Screens.PostBookScreen.route) },
+                onClick = {navController.navigate(Screens.PostBookScreen.route)},
                 contentColor = Color.Red,
                 elevation = FloatingActionButtonDefaults.elevation()
             ) {
@@ -219,6 +295,7 @@ fun BooksList(
     books: List<BookResponseItem>,
     navigationRoute: String,
     onBookClicked: (bookId: Int?) -> Unit,
+    onAvatarClicked: (email: String?) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -230,8 +307,59 @@ fun BooksList(
                 bookItem(
                     bookItem,
                     navigationRoute,
-                    onBookClicked = { id -> onBookClicked(bookItem.bookId) })
+                    onBookClicked = { id -> onBookClicked(bookItem.bookId) },
+                    onAvatarClicked = { email -> onAvatarClicked(bookItem.email) }
+                )
             }
         }
     }
 }
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun FilterChips() {
+    val filters = listOf(
+        "All",
+        "Tech",
+        "Biography",
+        "Business",
+        "Self-help",
+        "Non-Fiction",
+        "Autobiography",
+        "Political",
+        "Academic",
+        "Thriller",
+        "Mystery",
+        "Poetry",
+        "Art",
+        "History"
+    )
+
+    val selectedFilters = remember { filters.associateWith { mutableStateOf(false) } }
+
+    FlowRow(modifier = Modifier.padding(start = 5.dp, top = 10.dp)) {
+        filters.forEachIndexed { index, filter ->
+            FilterChip(
+                onClick = { selectedFilters[filter]?.value = !selectedFilters[filter]?.value!! },
+                label = { Text(filter) },
+                modifier = Modifier.padding(3.dp),
+                selected = (selectedFilters[filter]?.value ?: false),
+                leadingIcon = {
+                    if (selectedFilters[filter]?.value == true) {
+                        Icon(
+                            imageVector = Icons.Filled.Done,
+                            contentDescription = "Done icon",
+                            modifier = Modifier.size(FilterChipDefaults.IconSize),
+                            tint = Color.Red
+                        )
+                    } else {
+                        null
+                    }
+                }
+            )
+        }
+
+    }
+
+}
+

@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.bookbites.ui.sceens.AcceptedBidsScreen
-import com.example.bookbites.ui.theme.BookBitesTheme
+import com.example.bookbites.ui.theme.AnimatedSplashScreenTheme
 import com.example.navigation.AppNavigation
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,13 +17,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            BookBitesTheme {
+            AnimatedSplashScreenTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.onTertiary
 
                 ) {
+
                     AppNavigation()
                 }
             }

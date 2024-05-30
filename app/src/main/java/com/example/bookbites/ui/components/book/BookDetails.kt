@@ -51,7 +51,6 @@ import java.util.Date
 fun BookDetails(bookId: Int) {
     val viewModel: BookDetailsViewModel = hiltViewModel()
     val sentBidsViewModel:SentBidsViewModel = hiltViewModel()
-    val receivedBidsViewModel:ReceivedBidsViewModel = hiltViewModel()
     val bookDetail by viewModel.bookDetail.collectAsState()
 
 

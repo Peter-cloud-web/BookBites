@@ -49,10 +49,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.bookbites.R
 import com.example.bookbites.ui.viewmodels.BooksViewModel
+import com.example.navigation.Screens
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun BookPost() {
+fun BookPost(navController: NavController) {
 
     var title by rememberSaveable { mutableStateOf("") }
     var author by rememberSaveable { mutableStateOf("") }
@@ -145,6 +146,7 @@ fun BookPost() {
             "Art",
             "History"
         )
+
         var expanded by remember { mutableStateOf(false) }
         var selectedOptionText by remember { mutableStateOf("") }
         ExposedDropdownMenuBox(
@@ -183,8 +185,6 @@ fun BookPost() {
                 }
             }
         }
-
-//        availabilityDropDownMenu(availability = isAvailable)
 
         val optionsA = listOf("Available", "Unavailable")
         var expandedA by remember { mutableStateOf(false) }
@@ -246,6 +246,7 @@ fun BookPost() {
                     isAvailable.toBoolean()
                 )
                 Toast.makeText(context, "Book has been successfully posted!", Toast.LENGTH_SHORT).show()
+                navController.navigate(Screens.PostBookScreen.route)
             },
             colors = ButtonDefaults.buttonColors(Color.Red),
             modifier = Modifier.fillMaxWidth().height(70.dp).padding(10.dp)
@@ -263,12 +264,6 @@ fun BookPost() {
 
 }
 
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun categoryDropDownMenu() {
-
-}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -312,10 +307,4 @@ fun availabilityDropDownMenu(availability: String) {
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun BookPostPreview() {
-    BookPost()
 }

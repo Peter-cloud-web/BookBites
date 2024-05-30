@@ -14,6 +14,8 @@ data class BookResponseItem(
     val categoryId: Int,
     @SerialName("owner")
     val owner: String,
+    @SerialName("email")
+    val email:String,
     @SerialName("timeOfCreation")
     val timeOfCreation: Long
 )

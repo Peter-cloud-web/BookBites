@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import com.example.bookbites.model.bid.sentBids.BiddedBook
 import com.example.bookbites.model.bid.sentBids.Book
-import com.example.bookbites.ui.components.book.BottomAppBar
 import com.example.bookbites.ui.components.tabs.TabScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

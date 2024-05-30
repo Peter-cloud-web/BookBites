@@ -343,7 +343,25 @@ class BookBitesApi @Inject constructor(
         }
     }
 
-
+    suspend fun getUsersProfile(email:String):Resource<com.example.bookbites.model.user_details.UserDetailsResponse> {
+        return try{
+            Resource.Loading(null)
+            val userProfile = httpClient.get<List<com.example.bookbites.model.user_details.UserDetailsResponseItem>>{
+                url {
+                    protocol = URLProtocol.HTTP
+                    host = Constants.BOOKBITES_API
+                    encodedPath = Constants.USER_DETAILS + "/${email}"
+                }
+            }
+            Resource.Success(com.example.bookbites.model.user_details.UserDetailsResponse(userProfile))
+        }catch (e: Exception) {
+            Resource.Error(null, e.localizedMessage ?: "A unexpected error occurred")
+        } catch (e: IOException) {
+            Resource.Error(null, e.localizedMessage ?: "Network server error")
+        } catch (e: HttpException) {
+            Resource.Error(null, e.localizedMessage ?: "Network error")
+        }
+    }
     suspend fun waitingList() {}
 
 }

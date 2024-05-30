@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bookbites.model.bid.sentBids.BiddedBook
 import com.example.bookbites.model.bid.sentBids.Book
 import com.example.bookbites.ui.viewmodels.SentBidsViewModel
@@ -21,7 +22,7 @@ import com.example.bookbites.ui.viewmodels.SentBidsViewModel
 fun SentBidsList() {
 
     val sentBidsViewModel: SentBidsViewModel = hiltViewModel()
-    val sentBids = sentBidsViewModel.sentBids.collectAsState()
+    val sentBids = sentBidsViewModel.sentBids.collectAsStateWithLifecycle()
 
     sentBids.value.let { sentBidsUiState ->
 

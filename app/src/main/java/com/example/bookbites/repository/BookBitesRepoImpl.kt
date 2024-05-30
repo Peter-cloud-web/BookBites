@@ -69,4 +69,8 @@ class BookBitesRepoImpl @Inject constructor(val api: BookBitesApi) : BookBitesRe
         return api.postBook(title,author,page,category,summary,isAvailable)
     }
 
+    override suspend fun getUserDetails(email: String): Resource<com.example.bookbites.model.user_details.UserDetailsResponse>{
+        return api.getUsersProfile(email)
+    }
+
 }

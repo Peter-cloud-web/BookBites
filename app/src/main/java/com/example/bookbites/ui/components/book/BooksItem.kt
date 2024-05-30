@@ -4,6 +4,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -75,7 +77,7 @@ fun ToggleIconButton(
 }
 
 @Composable
-fun bookItem(books: BookResponseItem, navigationRoute: String, onBookClicked: (Int) -> Unit) {
+fun bookItem(books: BookResponseItem, navigationRoute: String, onBookClicked: (Int) -> Unit, onAvatarClicked:(String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -89,7 +91,9 @@ fun bookItem(books: BookResponseItem, navigationRoute: String, onBookClicked: (I
         ),
         border = BorderStroke(1.dp, Color.LightGray),
     ) {
-        Column(modifier = Modifier.padding(start = 1.dp, top = 1.dp)) {
+        Column(modifier = Modifier.padding(start = 1.dp, top = 1.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally) {
 
             Row(
                 modifier = Modifier.padding(top = 25.dp, start = 10.dp)
@@ -101,7 +105,7 @@ fun bookItem(books: BookResponseItem, navigationRoute: String, onBookClicked: (I
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(34.dp)
                         .clip(CircleShape)
-
+                        .clickable { onAvatarClicked(books.owner) }
 
                 )
 
@@ -148,27 +152,29 @@ fun bookItem(books: BookResponseItem, navigationRoute: String, onBookClicked: (I
                 }
             }
 
-            Row {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    modifier = Modifier.padding(start = 15.dp, top = 10.dp),
+                    modifier = Modifier.padding(),
                     text = "Book :",
                     style = TextStyle(
                         color = Color.Black,
-                        fontFamily = FontFamily.Serif,
+                        fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 11.sp
+                        fontSize = 20.sp
                     )
                 )
 
                 books.book.title.let { title ->
                     Text(
-                        modifier = Modifier.padding(start = 5.dp, top = 10.dp),
+                        modifier = Modifier.padding(),
                         text = title.toString(),
                         style = TextStyle(
                             color = Color.Black,
-                            fontFamily = FontFamily.Serif,
+                            fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp
+                            fontSize = 18.sp
                         )
                     )
                 }

@@ -5,6 +5,6 @@ import androidx.navigation.NavController
 import com.example.bookbites.ui.components.book.BookPost
 
 @Composable
-fun PostBookScreen() {
-    BookPost()
+fun PostBookScreen(navController: NavController) {
+    BookPost(navController)
 }
