@@ -24,6 +24,7 @@ import androidx.compose.material.icons.outlined.ArrowBackIosNew
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.EventAvailable
+import androidx.compose.material.icons.outlined.MyLocation
 import androidx.compose.material.icons.outlined.Pages
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Summarize
@@ -42,7 +43,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -59,8 +59,9 @@ fun BookPost(navController: NavController) {
     var author by rememberSaveable { mutableStateOf("") }
     var page by rememberSaveable { mutableStateOf("") }
     var category by rememberSaveable { mutableStateOf("") }
+    var location by rememberSaveable { mutableStateOf("") }
     var summary by rememberSaveable { mutableStateOf("") }
-    var isAvailable by rememberSaveable { mutableStateOf("") }
+    var isAvailable by rememberSaveable { mutableStateOf(true) }
 
     val viewModel: BooksViewModel = hiltViewModel()
 
@@ -131,24 +132,32 @@ fun BookPost(navController: NavController) {
         )
 
         val options = listOf(
-            "Fiction",
-            "Novel",
-            "non-fiction",
-            "self-help-books",
-            "children-books",
+            "All",
+            "Horror",
             "Biography",
-            "AutoBiography",
-            "Political",
-            "Academic",
-            "Thriller",
-            "Mystery",
+            "History",
+            "Self-Help",
+            "Cookbooks",
+            "Travel",
+            "Business",
+            "Parenting",
+            "Health",
+            "Religion",
+            "Spirituality",
             "Poetry",
+            "Classics",
+            "Young Adult",
+            "Children's Books",
+            "Science",
+            "Technology",
             "Art",
-            "History"
+            "Music",
+            "Sports",
+            "Reference",
+            "Comics & Graphic Novels"
         )
 
         var expanded by remember { mutableStateOf(false) }
-        var selectedOptionText by remember { mutableStateOf("") }
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { expanded = it },
@@ -186,6 +195,94 @@ fun BookPost(navController: NavController) {
             }
         }
 
+        val locationOptions = listOf(
+            "Baringo",
+            "Bomet",
+            "Bungoma",
+            "Busia",
+            "Elgeyo/Marakwet",
+            "Embu",
+            "Garissa",
+            "Homa Bay",
+            "Isiolo",
+            "Kajiado",
+            "Kakamega",
+            "Kericho",
+            "Kiambu",
+            "Kilifi",
+            "Kirinyaga",
+            "Kisii",
+            "Kisumu",
+            "Kitui",
+            "Kwale",
+            "Laikipia",
+            "Lamu",
+            "Machakos",
+            "Makueni",
+            "Mandera",
+            "Marsabit",
+            "Meru",
+            "Migori",
+            "Mombasa",
+            "Murang'a",
+            "Nairobi",
+            "Nakuru",
+            "Nandi",
+            "Narok",
+            "Nyamira",
+            "Nyandarua",
+            "Nyeri",
+            "Samburu",
+            "Siaya",
+            "Taita/Taveta",
+            "Tana River",
+            "Tharaka-Nithi",
+            "Trans Nzoia",
+            "Turkana",
+            "Uasin Gishu",
+            "Vihiga",
+            "Wajir",
+            "West Pokot"
+        )
+
+        var expandedLocation by remember { mutableStateOf(false) }
+        ExposedDropdownMenuBox(
+            expanded = expandedLocation,
+            onExpandedChange = { expandedLocation = it },
+            modifier = Modifier.padding(10.dp).fillMaxWidth(),
+        ) {
+            TextField(
+                readOnly = true,
+                value = location,
+                onValueChange = { },
+                label = { Text("Location") },
+                leadingIcon = { Icon(Icons.Outlined.MyLocation, "Location", tint = Color.Red) },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(
+                        expanded = expandedLocation
+                    )
+                },
+                colors = ExposedDropdownMenuDefaults.textFieldColors()
+            )
+            ExposedDropdownMenu(
+                expanded = expandedLocation,
+                onDismissRequest = {
+                    expanded = false
+                }
+            ) {
+                locationOptions.forEach { selectionOption ->
+                    DropdownMenuItem(
+                        onClick = {
+                            location = selectionOption
+                            expandedLocation = false
+                        }
+                    ) {
+                        Text(text = selectionOption)
+                    }
+                }
+            }
+        }
+
         val optionsA = listOf("Available", "Unavailable")
         var expandedA by remember { mutableStateOf(false) }
         ExposedDropdownMenuBox(
@@ -195,7 +292,7 @@ fun BookPost(navController: NavController) {
         ) {
             TextField(
                 readOnly = true,
-                value = isAvailable,
+                value = isAvailable.toString(),
                 onValueChange = { },
                 label = { Text("Availability") },
                 leadingIcon = { Icon(Icons.Outlined.EventAvailable, "Book", tint = Color.Red) },
@@ -215,7 +312,7 @@ fun BookPost(navController: NavController) {
                 optionsA.forEach { selectionOption ->
                     DropdownMenuItem(
                         onClick = {
-                            isAvailable = selectionOption
+                            isAvailable = selectionOption == "Available"
                             expandedA = false
                         }
                     ) {
@@ -238,15 +335,17 @@ fun BookPost(navController: NavController) {
         Button(
             onClick = {
                 viewModel.postBook(
-                    title,
-                    author,
-                    page.toInt(),
-                    category,
-                    summary,
-                    isAvailable.toBoolean()
+                    title = title,
+                    author = author,
+                    page = page.toInt(),
+                    category = category,
+                    location = location,
+                    summary = summary,
+                    isAvailable = isAvailable
                 )
-                Toast.makeText(context, "Book has been successfully posted!", Toast.LENGTH_SHORT).show()
-                navController.navigate(Screens.PostBookScreen.route)
+                Toast.makeText(context, "Book has been successfully posted!", Toast.LENGTH_SHORT)
+                    .show()
+                navController.navigate(Screens.HomeScreen.route)
             },
             colors = ButtonDefaults.buttonColors(Color.Red),
             modifier = Modifier.fillMaxWidth().height(70.dp).padding(10.dp)
@@ -308,3 +407,8 @@ fun availabilityDropDownMenu(availability: String) {
         }
     }
 }
+
+fun isAvailable(selectionOption:String):Boolean{
+    return selectionOption == "Available"
+}
+

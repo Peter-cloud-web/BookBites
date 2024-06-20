@@ -13,5 +13,9 @@ data class UserDetailsResponseItem(
     @SerialName("userName")
     val userName: String,
     @SerialName("userEmail")
-    val userEmail: String
+    val userEmail: String,
+    @SerialName("userFirstName")
+    val firstName: String,
+    @SerialName("userLastName")
+    val lastName: String
 )

@@ -5,6 +5,6 @@ import com.example.bookbites.ui.components.bids.ReceiveBidsList
 
 
 @Composable
-fun ReceivedBidsScreen() {
-    ReceiveBidsList()
+fun ReceivedBidsScreen(onAcceptedBidClick:(id:Int) -> Unit) {
+    ReceiveBidsList(onAcceptedBidClick = onAcceptedBidClick)
 }

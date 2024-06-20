@@ -1,10 +1,10 @@
 package com.example.bookbites.ui.viewmodels
 
-import android.provider.ContactsContract.CommonDataKinds.Email
-import android.util.Log
+import android.net.http.HttpException
+import android.os.Build
+import androidx.annotation.RequiresExtension
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil.network.HttpException
 import com.example.bookbites.model.authentication.AuthResponse
 import com.example.bookbites.repository.BookBitesRepo
 import com.example.bookbites.store.SessionManager
@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val sessionManager: SessionManager,
@@ -27,7 +28,7 @@ class LoginViewModel @Inject constructor(
     private val _loginAuthState = MutableStateFlow(LoginStates())
     val loginAuthState = _loginAuthState.asStateFlow()
 
-    fun LoginUser(email:String,password:String) {
+    fun LoginUser(email: String, password: String) {
 
         try {
             viewModelScope.launch {
@@ -38,7 +39,6 @@ class LoginViewModel @Inject constructor(
                     is Resource.Loading -> LoginStates(isLoading = true)
                     is Resource.Success -> {
                         val userDetails = bookBitesRepo.getLoggedUser().data?.userDetailResponse
-                        Log.d("LOGINVIEWMODEL","${userDetails}")
                         sessionManager.saveToken(token.data.toString())
                         LoginStates(success = AuthResponse(token.data.toString(), true))
                     }

@@ -1,4 +1,6 @@
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresExtension
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -29,10 +31,13 @@ import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Sell
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.PeopleOutline
 import androidx.compose.material.icons.outlined.Sell
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
@@ -43,6 +48,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,12 +58,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.bookbites.model.books.BookResponseItem
+import com.example.bookbites.store.SessionManager
 import com.example.bookbites.ui.components.book.bookItem
 import com.example.bookbites.ui.viewmodels.BooksViewModel
 import com.example.navigation.Screens
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -104,14 +118,16 @@ fun ToggleBottomNavButtons(
 }
 
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
 fun Books(
     navController: NavController,
+    sessionManager: SessionManager
 ) {
     val booksViewModel: BooksViewModel = hiltViewModel()
     val books = booksViewModel.book.collectAsStateWithLifecycle()
     Scaffold(
-        topBar = { TopAppBar() },
+        topBar = { TopAppBar(navController,sessionManager) },
         bottomBar = { BottomAppBar(navController) },
         content = { paddingValues ->
 
@@ -160,7 +176,9 @@ fun Books(
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun TopAppBar() {
+fun TopAppBar(navController: NavController,sessionManager: SessionManager) {
+    var showDropdown by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
     MaterialTheme {
         Column(modifier = Modifier.background(MaterialTheme.colorScheme.onTertiary)) {
             TopAppBar(
@@ -212,9 +230,25 @@ fun TopAppBar() {
 
                         IconButton(
                             modifier = Modifier.padding(end = 20.dp),
-                            onClick = {},
+                            onClick = {
+                                showDropdown = true
+                            },
                         ) {
                             Icon(Icons.Filled.AccountCircle, contentDescription = null)
+                        }
+
+                        DropdownMenu(expanded = showDropdown, onDismissRequest = { showDropdown = false }) {
+                            DropdownMenuItem(
+                                text = { Text("Logout") },
+                                onClick = {
+                                    scope.launch {
+                                        logoutUser(sessionManager)
+                                    }
+                                      navController.navigate(Screens.LoginScreen.route)
+                                },
+                                leadingIcon = { Icon(Icons.Outlined.Logout, contentDescription = null) }
+                            )
+
                         }
                     }
 
@@ -224,6 +258,12 @@ fun TopAppBar() {
             )
             FilterChips()
         }
+    }
+}
+
+suspend fun logoutUser(sessionManager: SessionManager){
+    withContext(Dispatchers.IO){
+        sessionManager.clearSession()
     }
 }
 
@@ -320,19 +360,28 @@ fun BooksList(
 fun FilterChips() {
     val filters = listOf(
         "All",
-        "Tech",
+        "Horror",
         "Biography",
+        "History",
+        "Self-Help",
+        "Cookbooks",
+        "Travel",
         "Business",
-        "Self-help",
-        "Non-Fiction",
-        "Autobiography",
-        "Political",
-        "Academic",
-        "Thriller",
-        "Mystery",
+        "Parenting",
+        "Health",
+        "Religion",
+        "Spirituality",
         "Poetry",
+        "Classics",
+        "Young Adult",
+        "Children's Books",
+        "Science",
+        "Technology",
         "Art",
-        "History"
+        "Music",
+        "Sports",
+        "Reference",
+        "Comics & Graphic Novels"
     )
 
     val selectedFilters = remember { filters.associateWith { mutableStateOf(false) } }

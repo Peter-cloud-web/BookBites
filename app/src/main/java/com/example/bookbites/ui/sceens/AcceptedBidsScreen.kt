@@ -1,19 +1,13 @@
 package com.example.bookbites.ui.sceens
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import android.os.Build
+import androidx.annotation.RequiresExtension
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.bookbites.ui.components.bids.AcceptedBids
+import com.example.bookbites.ui.components.bids.AcceptedBidList
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
-fun AcceptedBidsScreen(){
-      AcceptedBids()
-}
-@Preview
-@Composable
-fun AcceptedBidsScreenPreview(){
-   AcceptedBidsScreen()
+fun AcceptedBidsScreen(id:Int) {
+    AcceptedBidList(id)
 }
 

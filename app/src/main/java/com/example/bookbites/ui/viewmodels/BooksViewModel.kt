@@ -1,9 +1,11 @@
 package com.example.bookbites.ui.viewmodels
 
+import android.net.http.HttpException
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresExtension
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil.network.HttpException
 import com.example.bookbites.repository.BookBitesRepo
 import com.example.bookbites.ui.uistates.BookStates
 import com.example.util.Resource
@@ -14,6 +16,7 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @HiltViewModel
 class BooksViewModel @Inject constructor(private val bookBitesRepo: BookBitesRepo) : ViewModel() {
 
@@ -53,6 +56,7 @@ class BooksViewModel @Inject constructor(private val bookBitesRepo: BookBitesRep
         author: String,
         page: Int,
         category: String,
+        location: String,
         summary: String,
         isAvailable: Boolean
     ) {
@@ -60,8 +64,16 @@ class BooksViewModel @Inject constructor(private val bookBitesRepo: BookBitesRep
             viewModelScope.launch {
                 Resource.Loading(null)
                 val message =
-                    bookBitesRepo.postBook(title, author, page, category, summary, isAvailable)
-                Log.d("BOOKS_VIEWMODEL","${message.message}")
+                    bookBitesRepo.postBook(
+                        title = title,
+                        author = author,
+                        page = page,
+                        category = category,
+                        location = location,
+                        summary = summary,
+                        isAvailable = isAvailable
+                    )
+                Log.d("BOOKS_VIEWMODEL", "${message.message}")
                 Resource.Success(message)
             }
         } catch (e: Exception) {

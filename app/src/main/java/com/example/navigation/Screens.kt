@@ -9,7 +9,8 @@ sealed class Screens(val route: String) {
     object BidsScreen : Screens("bids")
     object ReceivedBids : Screens("receivedBids")
     object SentBids : Screens("sentBids")
-    object AcceptedBids:Screens("AcceptedBids")
+    object AcceptedBidsScreen:Screens("AcceptedBids")
     object PostBookScreen:Screens("postBook")
     object UserDetailsScreen:Screens("UserDetailsScreen")
+    object CreateBidScreen:Screens("CreateBidScreen")
 }

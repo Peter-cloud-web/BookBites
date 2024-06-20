@@ -1,9 +1,11 @@
 package com.example.bookbites.ui.viewmodels
 
+import android.net.http.HttpException
+import android.os.Build
+import androidx.annotation.RequiresExtension
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil.network.HttpException
 import com.example.bookbites.repository.BookBitesRepo
 import com.example.bookbites.ui.uistates.BookDetailUIState
 import com.example.util.Resource
@@ -14,10 +16,12 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @HiltViewModel
 class BookDetailsViewModel @Inject constructor(
     private val bookBitesRepo: BookBitesRepo,
-    private val savedStateHandle: SavedStateHandle) :
+    private val savedStateHandle: SavedStateHandle
+) :
     ViewModel() {
 
     private val _booksDetail = MutableStateFlow(BookDetailUIState())
@@ -25,11 +29,12 @@ class BookDetailsViewModel @Inject constructor(
 
     init {
         val bookId = savedStateHandle.get<Int>("bookId")
-        bookId?.let {id  ->
+        bookId?.let { id ->
             getBooksById(id)
         }
     }
 
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     fun getBooksById(id: Int) {
         try {
             viewModelScope.launch {

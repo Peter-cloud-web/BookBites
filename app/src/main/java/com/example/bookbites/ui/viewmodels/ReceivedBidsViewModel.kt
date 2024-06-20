@@ -1,6 +1,8 @@
 package com.example.bookbites.ui.viewmodels
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresExtension
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookbites.api.BookBitesApi
@@ -11,7 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @HiltViewModel
 class ReceivedBidsViewModel @Inject constructor(private val bitesApi: BookBitesApi) : ViewModel() {
 
@@ -21,6 +23,7 @@ class ReceivedBidsViewModel @Inject constructor(private val bitesApi: BookBitesA
     init {
         getReceivedBids()
     }
+
 
     fun getReceivedBids() {
         viewModelScope.launch {
@@ -41,4 +44,5 @@ class ReceivedBidsViewModel @Inject constructor(private val bitesApi: BookBitesA
             }
         }
     }
+
 }

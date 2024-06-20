@@ -1,6 +1,8 @@
 package com.example.bookbites.ui.components.bids
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,12 +21,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bookbites.model.bid.receivedBid.BiddedBook
 import com.example.bookbites.model.bid.receivedBid.Book
+import com.example.bookbites.model.bid.receivedBid.ReceivedBidItem
 import com.example.bookbites.ui.viewmodels.ReceivedBidsViewModel
 
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun ReceiveBidsList() {
+fun ReceiveBidsList(onAcceptedBidClick:(bidId:Int) -> Unit) {
     val receiveBidsViewModel: ReceivedBidsViewModel = hiltViewModel()
     val receivedBidsState = receiveBidsViewModel.receivedBids.collectAsStateWithLifecycle().value
     when {
@@ -47,7 +51,7 @@ fun ReceiveBidsList() {
                                 }
 
                                 receivedBidItem.book.forEach { book ->
-                                    ReceiveBidderBook(book)
+                                    ReceiveBidderBook(book, onAcceptedBidClick = onAcceptedBidClick,receivedBidItem)
                                 }
 
                             }

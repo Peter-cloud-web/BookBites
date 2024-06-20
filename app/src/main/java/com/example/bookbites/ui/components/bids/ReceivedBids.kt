@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -34,6 +35,8 @@ import androidx.compose.ui.unit.sp
 import com.example.bookbites.R
 import com.example.bookbites.model.bid.receivedBid.BiddedBook
 import com.example.bookbites.model.bid.receivedBid.Book
+import com.example.bookbites.model.bid.receivedBid.ReceivedBid
+import com.example.bookbites.model.bid.receivedBid.ReceivedBidItem
 
 
 @Composable
@@ -217,7 +220,8 @@ fun ReceiveBiddedBookItem(biddedBook: BiddedBook) {
 
 
 @Composable
-fun ReceiveBidderBook(book: Book) {
+fun ReceiveBidderBook(book: Book,onAcceptedBidClick:(bidId:Int) -> Unit,receivedBid: ReceivedBidItem) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -390,7 +394,9 @@ fun ReceiveBidderBook(book: Book) {
 
             Button(
                 onClick = {
-                },
+                    onAcceptedBidClick(receivedBid.bidId)
+                    Toast.makeText(context, "You accepted a bid", Toast.LENGTH_SHORT).show()
+                          },
                 colors = ButtonDefaults.buttonColors(Color.Green),
                 modifier = Modifier.width(130.dp).height(30.dp).padding(top = 3.dp,start = 10.dp)
 

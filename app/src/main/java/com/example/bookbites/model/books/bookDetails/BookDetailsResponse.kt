@@ -14,6 +14,10 @@ data class BookDetailsResponse(
     val categoryId: Int,
     @SerialName("owner")
     val owner: String,
+    @SerialName("firstName")
+    val firstName: String,
+    @SerialName("lastName")
+    val lastName: String,
     @SerialName("timeOfCreation")
     val timeOfCreation: Long
 )

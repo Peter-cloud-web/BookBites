@@ -32,7 +32,7 @@ class UserProfileViewModel @Inject constructor(private val bookBitesRepo: BookBi
             try {
                 Resource.Loading(null)
                 val userProfileResponse = bookBitesRepo.getUserDetails(email)
-                Log.d("USER PROFILE","${userProfileResponse.data?.userDetailsResponseItem}")
+//                Log.d("USER PROFILE", "${userProfileResponse.data?.userDetailsResponseItem?.associatedBooks?.size}")
                 _userProfile.value = when (userProfileResponse) {
                     is Resource.Loading -> UserProfileIUState(isLoading = true)
                     is Resource.Success -> UserProfileIUState(isSuccess = userProfileResponse.data)

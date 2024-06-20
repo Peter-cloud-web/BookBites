@@ -2,6 +2,7 @@ package com.example.bookbites.repository
 
 
 import com.example.bookbites.model.User.UserDetailsResponse
+import com.example.bookbites.model.accepted_bids.AllAcceptedBidsResponse
 import com.example.bookbites.model.bid.receivedBid.ReceivedBid
 import com.example.bookbites.model.bid.sentBids.SentBid
 import com.example.bookbites.model.books.BookResponse
@@ -16,10 +17,19 @@ interface BookBitesRepo {
     suspend fun registerUser(
         userEmail: String,
         userName: String,
+        firstName: String,
+        lastName: String,
         userPassword: String
     ): Resource<String>
 
     suspend fun getAllCategories(): Resource<CategoriesResponse>
+    suspend fun createBid(
+        id: Int, title: String,
+        author: String,
+        pages: Int,
+        summary: String
+    ): Resource<String>
+
     suspend fun getBooksByCategories(category: String): Resource<CategoryBooksResponse>
     suspend fun getSentBids(): Resource<SentBid>
     suspend fun getReceivedBids(): Resource<ReceivedBid>
@@ -31,10 +41,15 @@ interface BookBitesRepo {
         author: String,
         page: Int,
         category: String,
+        location: String,
         summary: String,
         isAvailable: Boolean
     ): Resource<String>
 
     suspend fun getUserDetails(email: String): Resource<com.example.bookbites.model.user_details.UserDetailsResponse>
+
+    suspend fun acceptBid(id: Int): Resource<String>
+
+    suspend fun getAcceptedBids():Resource<AllAcceptedBidsResponse>
 
 }

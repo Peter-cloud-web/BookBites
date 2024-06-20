@@ -22,21 +22,19 @@ class RegistationViewModel @Inject constructor(
     private val _authState = MutableStateFlow<Resource<AuthResponse>>(Resource.Loading(null))
     val authState: StateFlow<Resource<AuthResponse>> = _authState
 
-    fun registerUser(email: String, username: String, password: String) {
+    fun registerUser(email: String, username: String, firstName:String,lastName:String,password: String) {
 
         viewModelScope.launch {
 
             _authState.value = Resource.Loading(null)
 
-            val token = bookBitesRepo.registerUser(userEmail = email, userName = username, userPassword = password)
+            val token = bookBitesRepo.registerUser(userEmail = email, userName = username, firstName = firstName,lastName = lastName, userPassword = password)
 
             if (token is Resource.Success) {
 
                 dataStore.saveToken(token.data.toString())
 
                 val savedToken = dataStore.getToken.toString()
-
-                Log.d("TOKEN MODEL", savedToken?: "Token not found") // Log token or message if not found
 
                 _authState.value = Resource.Success(AuthResponse(savedToken, true))
             }else{

@@ -10,6 +10,8 @@ data class AssociatedBook(
     val author: String,
     @SerialName("category")
     val category: String,
+    @SerialName("location")
+    val location: String,
     @SerialName("isAvailable")
     val isAvailable: Boolean,
     @SerialName("page")

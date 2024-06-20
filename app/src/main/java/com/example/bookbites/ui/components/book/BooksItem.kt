@@ -77,7 +77,12 @@ fun ToggleIconButton(
 }
 
 @Composable
-fun bookItem(books: BookResponseItem, navigationRoute: String, onBookClicked: (Int) -> Unit, onAvatarClicked:(String) -> Unit) {
+fun bookItem(
+    books: BookResponseItem,
+    navigationRoute: String,
+    onBookClicked: (Int) -> Unit,
+    onAvatarClicked: (String) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -91,9 +96,11 @@ fun bookItem(books: BookResponseItem, navigationRoute: String, onBookClicked: (I
         ),
         border = BorderStroke(1.dp, Color.LightGray),
     ) {
-        Column(modifier = Modifier.padding(start = 1.dp, top = 1.dp),
+        Column(
+            modifier = Modifier.padding(start = 1.dp, top = 1.dp),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally) {
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
             Row(
                 modifier = Modifier.padding(top = 25.dp, start = 10.dp)
@@ -110,13 +117,41 @@ fun bookItem(books: BookResponseItem, navigationRoute: String, onBookClicked: (I
                 )
 
                 Column {
+
+                    Row {
+
+                        books.firstName.let { firstName ->
+                            Text(
+                                modifier = Modifier.padding(start = 15.dp, top = 1.dp),
+                                text = firstName,
+                                style = TextStyle(
+                                    fontFamily = FontFamily.SansSerif,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 15.sp
+                                )
+                            )
+                        }
+
+                        books.lastName.let { lastName ->
+                            Text(
+                                modifier = Modifier.padding(start = 5.dp, top = 1.dp),
+                                text = lastName,
+                                style = TextStyle(
+                                    fontFamily = FontFamily.SansSerif,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 15.sp
+                                )
+                            )
+                        }
+                    }
+
                     books.owner.let { owner ->
                         Text(
-                            modifier = Modifier.padding(start = 15.dp, top = 1.dp),
-                            text = owner,
+                            modifier = Modifier.padding(start = 15.dp, top = 5.dp),
+                            text = "@" + "${owner}",
                             style = TextStyle(
                                 fontFamily = FontFamily.SansSerif,
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.Light,
                                 fontSize = 15.sp
                             )
                         )
@@ -126,7 +161,7 @@ fun bookItem(books: BookResponseItem, navigationRoute: String, onBookClicked: (I
 
                         Text(
 
-                            modifier = Modifier.padding(start = 15.dp, top = 8.dp),
+                            modifier = Modifier.padding(start = 15.dp, top = 8.dp,bottom = 15.dp),
                             text = "${convertLongToTime(date)}",
                             style = TextStyle(
                                 color = Color.Black,
@@ -154,18 +189,8 @@ fun bookItem(books: BookResponseItem, navigationRoute: String, onBookClicked: (I
 
             Row(
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    modifier = Modifier.padding(),
-                    text = "Book :",
-                    style = TextStyle(
-                        color = Color.Black,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-                )
-
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 books.book.title.let { title ->
                     Text(
                         modifier = Modifier.padding(),

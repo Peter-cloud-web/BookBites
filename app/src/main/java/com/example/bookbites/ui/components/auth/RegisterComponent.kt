@@ -44,6 +44,8 @@ import com.example.navigation.Screens
 fun Register(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
+    var firstName by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     var registerViewModel: RegistationViewModel = hiltViewModel()
@@ -112,6 +114,26 @@ fun Register(navController: NavController) {
             Spacer(modifier = Modifier.height(10.dp))
 
             OutlinedTextField(
+                value = firstName,
+                onValueChange = {
+                    firstName = it
+                },
+                label = { Text("FirstName") }
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            OutlinedTextField(
+                value = lastName,
+                onValueChange = {
+                    lastName = it
+                },
+                label = { Text("LastName") }
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            OutlinedTextField(
                 value = password,
                 onValueChange = {
                     password = it
@@ -122,7 +144,7 @@ fun Register(navController: NavController) {
             Spacer(modifier = Modifier.height(10.dp))
             Button(
                 onClick = {
-                    registerViewModel.registerUser(email, username, password)
+                    registerViewModel.registerUser(email, username, firstName, lastName, password)
                     Toast.makeText(context, "User registered", Toast.LENGTH_SHORT).show()
                 },
                 colors = ButtonDefaults.buttonColors(Color.Black),
@@ -142,7 +164,7 @@ fun Register(navController: NavController) {
 
             ClickableText(
                 text = AnnotatedString("Already have an account? Login"),
-                onClick = { navController.navigate(Screens.LoginScreen.route)},
+                onClick = { navController.navigate(Screens.LoginScreen.route) },
                 style = TextStyle(
                     color = Color.Blue,
                     fontFamily = FontFamily.Serif,

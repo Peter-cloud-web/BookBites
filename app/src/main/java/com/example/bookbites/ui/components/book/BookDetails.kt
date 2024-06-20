@@ -36,23 +36,16 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bookbites.R
 import com.example.bookbites.ui.viewmodels.BookDetailsViewModel
-import com.example.bookbites.ui.viewmodels.ReceivedBidsViewModel
-import com.example.bookbites.ui.viewmodels.SentBidsViewModel
-import java.text.SimpleDateFormat
-import java.util.Date
 
 @Composable
-fun BookDetails(bookId: Int) {
+fun BookDetails(bookId: Int, onBidClicked: (bookId: Int) -> Unit) {
     val viewModel: BookDetailsViewModel = hiltViewModel()
-    val sentBidsViewModel:SentBidsViewModel = hiltViewModel()
     val bookDetail by viewModel.bookDetail.collectAsState()
-
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -81,7 +74,7 @@ fun BookDetails(bookId: Int) {
 
             response?.book?.author.let { author ->
                 Text(
-                    author.toString(),
+                    "Author : " + "${author.toString()}",
                     modifier = Modifier.padding(
                         start = 30.dp,
                         bottom = 10.dp,
@@ -101,7 +94,8 @@ fun BookDetails(bookId: Int) {
 
             response?.owner.let { owner ->
                 Text(
-                    owner.toString(),
+
+                    "Owner : " + "@" + "" + "${owner.toString()}",
                     modifier = Modifier.padding(start = 30.dp, bottom = 20.dp, end = 10.dp),
                     style = TextStyle(
                         fontFamily = FontFamily.Monospace,
@@ -169,8 +163,6 @@ fun BookDetails(bookId: Int) {
                     }
 
                 }
-
-
 
                 Card(
                     modifier = Modifier
@@ -317,6 +309,19 @@ fun BookDetails(bookId: Int) {
                     )
                 }
 
+                response?.book?.location.let { location ->
+                    Text(
+                        "Located in ${location}",
+                        modifier = Modifier.padding(12.dp),
+                        style = TextStyle(
+                            textAlign = TextAlign.End,
+                            fontFamily = FontFamily.Serif,
+                            fontSize = 15.sp,
+                            color = Color.Black,
+                        )
+                    )
+                }
+
                 response?.timeOfCreation?.let { date ->
                     Text(
                         "Posted : ${convertLongToTime(date)}",
@@ -334,7 +339,7 @@ fun BookDetails(bookId: Int) {
 
             Button(
                 onClick = {
-                   sentBidsViewModel.getSentBids()
+                    response?.bookId?.let { id -> onBidClicked(id) }
                 },
                 colors = ButtonDefaults.buttonColors(Color.Red),
                 modifier = Modifier.fillMaxWidth().height(70.dp).padding(10.dp)
@@ -363,13 +368,13 @@ fun BookDetails(bookId: Int) {
 
             }
 
-            Row(verticalAlignment = Alignment.CenterVertically){
+            Row(verticalAlignment = Alignment.CenterVertically) {
 
                 if (response?.book?.isAvailable == false) {
                     ClickableText(
                         text = AnnotatedString("Join waiting list"),
                         onClick = {},
-                        modifier = Modifier.padding(start = 195.dp,top = 10.dp).focusable(false),
+                        modifier = Modifier.padding(start = 195.dp, top = 10.dp).focusable(false),
                         style = TextStyle(
                             fontFamily = FontFamily.SansSerif,
                             fontWeight = FontWeight.ExtraBold,
@@ -377,11 +382,11 @@ fun BookDetails(bookId: Int) {
                             color = Color.Blue
                         ),
                     )
-                }else{
+                } else {
                     ClickableText(
                         text = AnnotatedString("Join waiting list"),
                         onClick = {},
-                        modifier = Modifier.padding(start = 195.dp,top = 10.dp).alpha(0f),
+                        modifier = Modifier.padding(start = 195.dp, top = 10.dp).alpha(0f),
                         style = TextStyle(
                             fontFamily = FontFamily.SansSerif,
                             fontWeight = FontWeight.ExtraBold,
@@ -389,18 +394,10 @@ fun BookDetails(bookId: Int) {
                             color = Color.Blue
                         ),
                     )
-                    
+
                 }
             }
         }
     }
 }
 
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun preview(){
-    BookDetails(1)
-}

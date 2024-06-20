@@ -139,8 +139,8 @@ fun UserDetailsItem() {
 fun AssociatedBooksItem(associatedBook: AssociatedBook) {
     Card(
         modifier = Modifier
+            .fillMaxWidth()
             .padding(top = 10.dp)
-            .fillMaxSize()
             .clickable {},
         shape = MaterialTheme.shapes.small,
         colors = CardDefaults.cardColors(
@@ -246,25 +246,11 @@ fun AssociatedBooksItem(associatedBook: AssociatedBook) {
                 }
 
             }
-        }
 
-
-        Row {
-            androidx.compose.material.Text(
-                modifier = Modifier.padding(start = 15.dp, top = 10.dp),
-                text = "Category : ",
-                style = TextStyle(
-                    color = Color.Black,
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 11.sp
-                )
-            )
-
-            associatedBook.let {
+            Row {
                 androidx.compose.material.Text(
-                    modifier = Modifier.padding(start = 5.dp, top = 10.dp),
-                    text = it.category,
+                    modifier = Modifier.padding(start = 15.dp, top = 10.dp),
+                    text = "Category : ",
                     style = TextStyle(
                         color = Color.Black,
                         fontFamily = FontFamily.Serif,
@@ -272,28 +258,28 @@ fun AssociatedBooksItem(associatedBook: AssociatedBook) {
                         fontSize = 11.sp
                     )
                 )
+
+                associatedBook.let {
+                    androidx.compose.material.Text(
+                        modifier = Modifier.padding(start = 5.dp, top = 10.dp),
+                        text = it.category,
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 11.sp
+                        )
+                    )
+                }
+
             }
 
-        }
 
 
-
-        Row {
-            androidx.compose.material.Text(
-                modifier = Modifier.padding(start = 15.dp, top = 10.dp),
-                text = "Summary : ",
-                style = TextStyle(
-                    color = Color.Black,
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 11.sp
-                )
-            )
-
-            associatedBook.let {
+            Row {
                 androidx.compose.material.Text(
-                    modifier = Modifier.padding(start = 5.dp, top = 10.dp, bottom = 10.dp),
-                    text = it.summary,
+                    modifier = Modifier.padding(start = 15.dp, top = 10.dp),
+                    text = "Summary : ",
                     style = TextStyle(
                         color = Color.Black,
                         fontFamily = FontFamily.Serif,
@@ -301,8 +287,22 @@ fun AssociatedBooksItem(associatedBook: AssociatedBook) {
                         fontSize = 11.sp
                     )
                 )
+
+                associatedBook.let {
+                    androidx.compose.material.Text(
+                        modifier = Modifier.padding(start = 5.dp, top = 10.dp, bottom = 10.dp),
+                        text = it.summary,
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 11.sp
+                        )
+                    )
+                }
             }
         }
+
     }
 }
 

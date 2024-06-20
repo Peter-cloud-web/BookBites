@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ReceivedBidItem(
+    val bidId: Int,
     val biddedBook: List<BiddedBook>,
     val biddedBookId: Int,
     val bidder: String,

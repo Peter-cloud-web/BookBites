@@ -14,6 +14,10 @@ data class BookResponseItem(
     val categoryId: Int,
     @SerialName("owner")
     val owner: String,
+    @SerialName("firstName")
+    val firstName: String,
+    @SerialName("lastName")
+    val lastName: String,
     @SerialName("email")
     val email:String,
     @SerialName("timeOfCreation")

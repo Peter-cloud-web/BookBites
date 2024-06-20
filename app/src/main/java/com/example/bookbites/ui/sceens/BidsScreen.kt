@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.UiComposable
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import com.example.bookbites.model.bid.sentBids.BiddedBook
 import com.example.bookbites.model.bid.sentBids.Book
@@ -21,6 +22,8 @@ import com.example.bookbites.ui.components.tabs.TabScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun BidsScreen() {
-       TabScreen()
+fun BidsScreen(savedStateHandle: SavedStateHandle,
+               onAcceptedBid: (Int) -> Unit) {
+
+       TabScreen(savedStateHandle = savedStateHandle, onAcceptedBidClick = onAcceptedBid)
 }
