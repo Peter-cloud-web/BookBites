@@ -1,5 +1,6 @@
 package com.example.bookbites.ui.components
 
+import androidx.compose.material.DrawerValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Home
@@ -11,9 +12,11 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.People
 import androidx.compose.material.icons.outlined.Sell
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -62,5 +65,8 @@ fun NavigationDrawer() {
     )
 
     var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
+
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
 }
