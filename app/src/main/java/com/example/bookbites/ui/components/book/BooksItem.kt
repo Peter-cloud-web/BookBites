@@ -28,7 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,23 +48,75 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 @Composable
-fun ToggleIconButton(
+fun ToggleLikeButton(
+    isToggled: Boolean,
+    onToggle: () -> Unit,
     initialColor: Color = Color.DarkGray,
     toggleColor: Color = Color.Red,
-    onClick: () -> Unit,
     initialIcon: ImageVector,
     toggleIcon: ImageVector,
     contentDescription: String? = null
 ) {
-    var isToggled by remember { mutableStateOf(false) }
+
     val tint by animateColorAsState(if (isToggled) toggleColor else initialColor)
     val icon = if (isToggled) toggleIcon else initialIcon
 
     IconButton(
-        onClick = {
-            isToggled = !isToggled
-            onClick()
-        },
+        onClick = onToggle
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = contentDescription,
+            modifier = Modifier.size(20.dp),
+            tint = tint
+        )
+    }
+
+}
+
+@Composable
+fun ToggleBookmarkButton(
+    isToggled: Boolean,
+    onToggle: () -> Unit,
+    initialColor: Color = Color.DarkGray,
+    toggleColor: Color = Color.Green,
+    initialIcon: ImageVector,
+    toggleIcon: ImageVector,
+    contentDescription: String? = null
+) {
+
+    val tint by animateColorAsState(if (isToggled) toggleColor else initialColor)
+    val icon = if (isToggled) toggleIcon else initialIcon
+
+    IconButton(
+        onClick = onToggle
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = contentDescription,
+            modifier = Modifier.size(20.dp),
+            tint = tint
+        )
+    }
+
+}
+
+@Composable
+fun ToggleShareButton(
+    isToggled: Boolean,
+    onToggle: () -> Unit,
+    initialColor: Color = Color.DarkGray,
+    toggleColor: Color = Color.Green,
+    initialIcon: ImageVector,
+    toggleIcon: ImageVector,
+    contentDescription: String? = null
+) {
+
+    val tint by animateColorAsState(if (isToggled) toggleColor else initialColor)
+    val icon = if (isToggled) toggleIcon else initialIcon
+
+    IconButton(
+        onClick = onToggle
     ) {
         Icon(
             imageVector = icon,
@@ -83,6 +135,7 @@ fun bookItem(
     onBookClicked: (Int) -> Unit,
     onAvatarClicked: (String) -> Unit
 ) {
+
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -161,7 +214,7 @@ fun bookItem(
 
                         Text(
 
-                            modifier = Modifier.padding(start = 15.dp, top = 8.dp,bottom = 15.dp),
+                            modifier = Modifier.padding(start = 15.dp, top = 8.dp, bottom = 15.dp),
                             text = "${convertLongToTime(date)}",
                             style = TextStyle(
                                 color = Color.Black,
@@ -285,28 +338,36 @@ fun bookItem(
         }
         Row(modifier = Modifier.padding(start = 5.dp, top = 25.dp)) {
 
-            ToggleIconButton(
+            var likeButtonState by rememberSaveable { mutableStateOf(false) }
+            var bookMarkButtonState by rememberSaveable { mutableStateOf(false) }
+            var shareButtonState by rememberSaveable { mutableStateOf(false) }
+
+
+            ToggleLikeButton(
+                isToggled = bookMarkButtonState,
+                onToggle = { bookMarkButtonState = !bookMarkButtonState },
                 initialColor = Color.DarkGray,
-                toggleColor = Color.Blue,
-                onClick = {},
+                toggleColor = Color.Red,
                 initialIcon = Icons.Filled.BookmarkBorder,
                 toggleIcon = Icons.Filled.Bookmark,
                 contentDescription = null
             )
 
-            ToggleIconButton(
+            ToggleBookmarkButton(
+                isToggled = likeButtonState,
+                onToggle = { likeButtonState = !likeButtonState },
                 initialColor = Color.DarkGray,
                 toggleColor = Color.Red,
-                onClick = {},
                 initialIcon = Icons.Filled.FavoriteBorder,
                 toggleIcon = Icons.Filled.Favorite,
                 contentDescription = null
             )
 
-            ToggleIconButton(
+            ToggleShareButton(
+                isToggled = shareButtonState,
+                onToggle = { shareButtonState = !shareButtonState },
                 initialColor = Color.DarkGray,
-                toggleColor = Color.Red,
-                onClick = {},
+                toggleColor = Color.Green,
                 initialIcon = Icons.Filled.IosShare,
                 toggleIcon = Icons.Outlined.IosShare,
                 contentDescription = null

@@ -5,13 +5,13 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.AppBarDefaults
 import androidx.compose.material.FloatingActionButton
@@ -58,18 +58,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.bookbites.model.books.BookResponseItem
 import com.example.bookbites.store.SessionManager
 import com.example.bookbites.ui.components.book.bookItem
+import com.example.bookbites.ui.uistates.BookStates
 import com.example.bookbites.ui.viewmodels.BooksViewModel
 import com.example.navigation.Screens
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -114,9 +111,7 @@ fun ToggleBottomNavButtons(
 
     }
 
-
 }
-
 
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
@@ -124,59 +119,134 @@ fun Books(
     navController: NavController,
     sessionManager: SessionManager
 ) {
+
+    var selectedCategory by remember { mutableStateOf<String?>(null) }
+    var selectedLocation by remember { mutableStateOf<String?>(null) }
+
     val booksViewModel: BooksViewModel = hiltViewModel()
     val books = booksViewModel.book.collectAsStateWithLifecycle()
+
+    val selectedCategoryBooks = booksViewModel.selectedCategoryBooks.collectAsStateWithLifecycle()
+    val selectedLocationBooks = booksViewModel.selectedLocationBooks.collectAsStateWithLifecycle()
+
     Scaffold(
-        topBar = { TopAppBar(navController,sessionManager) },
+        topBar = {
+            TopAppBar(
+                navController,
+                sessionManager,
+                onLocationSelected = { location ->
+                    selectedLocation = location
+                    if (location != null) {
+                        booksViewModel.getBooksByLocation(location)
+                    } else {
+                        booksViewModel.getBooks()
+                    }
+                },
+                onCategorySelected = { category ->
+                    selectedCategory = category
+                    if (category != null) {
+                        booksViewModel.getBooksByCategory(category)
+                    } else {
+                        booksViewModel.getBooks()
+                    }
+                }
+            )
+        },
         bottomBar = { BottomAppBar(navController) },
         content = { paddingValues ->
-
             Column(
                 modifier = Modifier
                     .padding(paddingValues)
             ) {
 
-                books.value.let { states ->
-                    when {
-
-                        states.isLoading -> {
-                            CircularProgressIndicator()
-                        }
-
-                        states.isSuccess != null -> {
-                            states.isSuccess.books?.let { bookList ->
-                                BooksList(
-                                    books = bookList,
-                                    navigationRoute = "BookDetails",
-                                    onBookClicked = { bookId ->
-                                        if (bookId != null) {
-                                            navController.navigate("BookDetails/${bookId}")
-                                        }
-                                    },
-                                    onAvatarClicked = { email ->
-                                        if (email != null) {
-                                            navController.navigate("UserDetailsScreen/${email}")
-                                        }
-                                    }
-                                )
+                if (selectedCategory != null) {
+                    Text(
+                        text = "Selected Category: $selectedCategory",
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    SelectedCategoryBooks(
+                        booksState = selectedCategoryBooks.value,
+                        navigationRoute = navController.toString(),
+                        onBookClicked = { bookId ->
+                            if (bookId != null) {
+                                navController.navigate("BookDetails/${bookId}")
+                            }
+                        },
+                        onAvatarClicked = { email ->
+                            if (email != null) {
+                                navController.navigate("UserDetailsScreen/${email}")
                             }
                         }
+                    )
+                } else if (selectedLocation != null) {
+                    Text(
+                        text = "Selected Location: $selectedLocation",
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    SelectedLocationBooks(
+                        booksState = selectedLocationBooks.value,
+                        navigationRoute = navController.toString(),
+                        onBookClicked = { bookId ->
+                            if (bookId != null) {
+                                navController.navigate("BookDetails/${bookId}")
+                            }
+                        },
+                        onAvatarClicked = { email ->
+                            if (email != null) {
+                                navController.navigate("UserDetailsScreen/${email}")
+                            }
+                        }
+                    )
+                } else {
 
-                        states.error != null -> "An unexpected error occcurred"
+                    books.value.let { states ->
+                        when {
 
-                        else -> {}
+                            states.isLoading -> {
+                                CircularProgressIndicator()
+                            }
+
+                            states.isSuccess != null -> {
+                                states.isSuccess.books?.let { bookList ->
+                                    BooksList(
+                                        books = bookList,
+                                        navigationRoute = "BookDetails",
+                                        onBookClicked = { bookId ->
+                                            if (bookId != null) {
+                                                navController.navigate("BookDetails/${bookId}")
+                                            }
+                                        },
+                                        onAvatarClicked = { email ->
+                                            if (email != null) {
+                                                navController.navigate("UserDetailsScreen/${email}")
+                                            }
+                                        }
+                                    )
+                                }
+                            }
+
+                            states.error != null -> "An unexpected error occcurred"
+
+                            else -> {}
+                        }
                     }
                 }
+
             }
-
         }
-
     )
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun TopAppBar(navController: NavController,sessionManager: SessionManager) {
+fun TopAppBar(
+    navController: NavController,
+    sessionManager: SessionManager,
+    onLocationSelected: (String) -> Unit,
+    onCategorySelected: (String?) -> Unit,
+) {
     var showDropdown by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     MaterialTheme {
@@ -237,16 +307,23 @@ fun TopAppBar(navController: NavController,sessionManager: SessionManager) {
                             Icon(Icons.Filled.AccountCircle, contentDescription = null)
                         }
 
-                        DropdownMenu(expanded = showDropdown, onDismissRequest = { showDropdown = false }) {
+                        DropdownMenu(
+                            expanded = showDropdown,
+                            onDismissRequest = { showDropdown = false }) {
                             DropdownMenuItem(
                                 text = { Text("Logout") },
                                 onClick = {
                                     scope.launch {
                                         logoutUser(sessionManager)
                                     }
-                                      navController.navigate(Screens.LoginScreen.route)
+                                    navController.navigate(Screens.LoginScreen.route)
                                 },
-                                leadingIcon = { Icon(Icons.Outlined.Logout, contentDescription = null) }
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Outlined.Logout,
+                                        contentDescription = null
+                                    )
+                                }
                             )
 
                         }
@@ -256,13 +333,15 @@ fun TopAppBar(navController: NavController,sessionManager: SessionManager) {
                 backgroundColor = MaterialTheme.colorScheme.onTertiary,
                 elevation = AppBarDefaults.TopAppBarElevation,
             )
-            FilterChips()
+            FilterCategoryChips(onCategorySelected = onCategorySelected)
+
+            FilterLocationChips(onLocationSelected = onLocationSelected)
         }
     }
 }
 
-suspend fun logoutUser(sessionManager: SessionManager){
-    withContext(Dispatchers.IO){
+suspend fun logoutUser(sessionManager: SessionManager) {
+    withContext(Dispatchers.IO) {
         sessionManager.clearSession()
     }
 }
@@ -319,7 +398,7 @@ fun BottomAppBar(navController: NavController) {
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {navController.navigate(Screens.PostBookScreen.route)},
+                onClick = { navController.navigate(Screens.PostBookScreen.route) },
                 contentColor = Color.Red,
                 elevation = FloatingActionButtonDefaults.elevation()
             ) {
@@ -328,6 +407,98 @@ fun BottomAppBar(navController: NavController) {
         },
         containerColor = MaterialTheme.colorScheme.onTertiary
     )
+}
+
+@Composable
+fun SelectedCategoryBooks(
+    booksState: BookStates,
+    navigationRoute: String,
+    onBookClicked: (bookId: Int?) -> Unit,
+    onAvatarClicked: (email: String?) -> Unit
+) {
+    when {
+        booksState.isLoading -> {
+            CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+        }
+
+        booksState.isSuccess != null -> {
+            booksState.isSuccess.books?.let { books ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(2.dp)
+                ) {
+                    LazyColumn(
+                        contentPadding = PaddingValues(2.dp)
+                    ) {
+                        items(books) { book ->
+                            bookItem(
+                                book,
+                                navigationRoute,
+                                onBookClicked = { onBookClicked(book.bookId) },
+                                onAvatarClicked = { onAvatarClicked(book.email) }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+
+        booksState.error != null -> {
+            Text(
+                text = booksState.error,
+                color = Color.Red,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun SelectedLocationBooks(
+    booksState: BookStates,
+    navigationRoute: String,
+    onBookClicked: (bookId: Int?) -> Unit,
+    onAvatarClicked: (email: String?) -> Unit
+) {
+
+    when {
+        booksState.isLoading -> {
+            CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+        }
+
+        booksState.isSuccess != null -> {
+            booksState.isSuccess.books?.let { books ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(2.dp)
+                ) {
+                    LazyColumn(
+                        contentPadding = PaddingValues(2.dp)
+                    ) {
+                        items(books) { book ->
+                            bookItem(
+                                book,
+                                navigationRoute,
+                                onBookClicked = { onBookClicked(book.bookId) },
+                                onAvatarClicked = { onAvatarClicked(book.email) }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        booksState.error != null -> {
+            Text(
+                text = booksState.error,
+                color = Color.Red,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+    }
 }
 
 @Composable
@@ -357,7 +528,7 @@ fun BooksList(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun FilterChips() {
+fun FilterCategoryChips(onCategorySelected: (String?) -> Unit) {
     val filters = listOf(
         "All",
         "Horror",
@@ -384,17 +555,104 @@ fun FilterChips() {
         "Comics & Graphic Novels"
     )
 
-    val selectedFilters = remember { filters.associateWith { mutableStateOf(false) } }
+    var selectedFilter by remember { mutableStateOf<String?>(null) }
 
-    FlowRow(modifier = Modifier.padding(start = 5.dp, top = 10.dp)) {
-        filters.forEachIndexed { index, filter ->
+    LazyRow(userScrollEnabled = true, modifier = Modifier.padding(5.dp)) {
+        items(filters) { filter ->
             FilterChip(
-                onClick = { selectedFilters[filter]?.value = !selectedFilters[filter]?.value!! },
+                onClick = {
+                    selectedFilter = if (selectedFilter == filter) null else filter
+                    onCategorySelected(if (filter == "All") null else selectedFilter)
+                },
                 label = { Text(filter) },
                 modifier = Modifier.padding(3.dp),
-                selected = (selectedFilters[filter]?.value ?: false),
+                selected = (filter == selectedFilter),
                 leadingIcon = {
-                    if (selectedFilters[filter]?.value == true) {
+                    if (filter == selectedFilter) {
+                        Icon(
+                            imageVector = Icons.Filled.Done,
+                            contentDescription = "Done icon",
+                            modifier = Modifier.size(FilterChipDefaults.IconSize),
+                            tint = Color.Red
+                        )
+                    }
+                },
+                colors = FilterChipDefaults.filterChipColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    labelColor = Color.White
+                )
+            )
+        }
+    }
+}
+
+@Composable
+fun FilterLocationChips(onLocationSelected: (String) -> Unit) {
+    val locationFilters = listOf(
+        "Baringo",
+        "Bomet",
+        "Bungoma",
+        "Busia",
+        "Elgeyo/Marakwet",
+        "Embu",
+        "Garissa",
+        "Homa Bay",
+        "Isiolo",
+        "Kajiado",
+        "Kakamega",
+        "Kiambu",
+        "Kilifi",
+        "Kirinyaga",
+        "Kisii",
+        "Kisumu",
+        "Kwale",
+        "Machakos",
+        "Makueni",
+        "Mandera",
+        "Marsabit",
+        "Meru",
+        "Migori",
+        "Mombasa",
+        "Murang'a",
+        "Nairobi",
+        "Nakuru",
+        "Nandi",
+        "Narok",
+        "Nyamira",
+        "Nyandarua",
+        "Nyeri",
+        "Samburu",
+        "Siaya",
+        "Taita/Taveta",
+        "Tana River",
+        "Tharaka-Nithi",
+        "Turkana",
+        "Uasin Gishu",
+        "Vihiga",
+        "Wajir",
+        "West Pokot"
+    )
+
+    var selectedFilters by remember { mutableStateOf<String?>(null) }
+
+    LazyRow(userScrollEnabled = true, modifier = Modifier.padding(5.dp)) {
+
+        items(locationFilters) { locationFilters ->
+            FilterChip(
+                onClick = {
+                    selectedFilters =
+                        if (selectedFilters == locationFilters) null else locationFilters
+                    (if (locationFilters == "All") null else selectedFilters)?.let { selectedFilters ->
+                        onLocationSelected(
+                            selectedFilters
+                        )
+                    }
+                },
+                label = { Text(locationFilters) },
+                modifier = Modifier.padding(3.dp),
+                selected = (locationFilters == selectedFilters),
+                leadingIcon = {
+                    if (locationFilters == selectedFilters) {
                         Icon(
                             imageVector = Icons.Filled.Done,
                             contentDescription = "Done icon",
@@ -404,11 +662,22 @@ fun FilterChips() {
                     } else {
                         null
                     }
-                }
+                },
+                colors = FilterChipDefaults.filterChipColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    labelColor = Color.White
+                )
             )
         }
 
     }
-
 }
+
+
+
+
+
+
+
+
 

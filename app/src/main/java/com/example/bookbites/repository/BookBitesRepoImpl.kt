@@ -50,8 +50,12 @@ class BookBitesRepoImpl @Inject constructor(val api: BookBitesApi) : BookBitesRe
         return api.createBid(id, title, author, pages, summary)
     }
 
-    override suspend fun getBooksByCategories(category: String): Resource<CategoryBooksResponse> {
+    override suspend fun getBooksByCategories(category: String): Resource<BookResponse> {
         return api.getBooksByCategories(category)
+    }
+
+    override suspend fun getBooksByLocation(location: String): Resource<BookResponse> {
+        return api.getBooksByLocation(location)
     }
 
     override suspend fun getSentBids(): Resource<SentBid> {

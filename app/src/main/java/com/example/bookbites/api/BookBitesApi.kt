@@ -242,18 +242,41 @@ class BookBitesApi @Inject constructor(
     }
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-    suspend fun getBooksByCategories(category: String): Resource<CategoryBooksResponse> {
+    suspend fun getBooksByCategories(category: String): Resource<BookResponse> {
 
         return try {
             Resource.Loading(null)
-            val allBooksByCategory = httpClient.get<CategoryBooksResponse> {
+            val allBooksByCategory = httpClient.get<List<BookResponseItem>>{
                 url {
                     protocol = URLProtocol.HTTP
                     host = Constants.BOOKBITES_API
-                    encodedPath = Constants.CATEGORY + "$category"
+                    encodedPath = Constants.CATEGORY + "/$category"
                 }
             }
-            Resource.Success(allBooksByCategory)
+            Resource.Success(BookResponse(allBooksByCategory))
+        } catch (e: Exception) {
+            Resource.Error(null, e.localizedMessage ?: "An unexpected error occurred")
+        } catch (e: IOException) {
+            Resource.Error(null, e.localizedMessage ?: "Network server error")
+        } catch (e: HttpException) {
+            Resource.Error(null, e.localizedMessage ?: "Network error")
+        }
+
+    }
+
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+    suspend fun getBooksByLocation(location: String): Resource<BookResponse> {
+
+        return try {
+            Resource.Loading(null)
+            val allBooksByLocation = httpClient.get<List<BookResponseItem>>{
+                url {
+                    protocol = URLProtocol.HTTP
+                    host = Constants.BOOKBITES_API
+                    encodedPath = Constants.LOCATION + "/$location"
+                }
+            }
+            Resource.Success(BookResponse(allBooksByLocation))
         } catch (e: Exception) {
             Resource.Error(null, e.localizedMessage ?: "An unexpected error occurred")
         } catch (e: IOException) {

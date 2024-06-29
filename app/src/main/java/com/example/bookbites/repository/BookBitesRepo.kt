@@ -30,7 +30,8 @@ interface BookBitesRepo {
         summary: String
     ): Resource<String>
 
-    suspend fun getBooksByCategories(category: String): Resource<CategoryBooksResponse>
+    suspend fun getBooksByCategories(category: String): Resource<BookResponse>
+    suspend fun getBooksByLocation(location: String): Resource<BookResponse>
     suspend fun getSentBids(): Resource<SentBid>
     suspend fun getReceivedBids(): Resource<ReceivedBid>
     suspend fun getLoggedUser(): Resource<UserDetailsResponse>
