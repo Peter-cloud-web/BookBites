@@ -5,6 +5,8 @@
 BookBites is a platform for book lovers to share their passion for books and connect with other
 enthusiasts, basically physical books exchange and sharing platform.
 
+This application uses a backend engine built with Ktor server with kotlin and postgres database : [BookBites API](https://github.com/Peter-cloud-web/BookSharingApp-Backend)
+
 #### Here's how it works:
 
 ##### Share your book:
