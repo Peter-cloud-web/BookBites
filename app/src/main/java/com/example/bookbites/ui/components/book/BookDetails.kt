@@ -1,5 +1,7 @@
 package com.example.bookbites.ui.components.book
 
+import android.os.Build
+import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bookbites.R
 import com.example.bookbites.ui.viewmodels.BookDetailsViewModel
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
 fun BookDetails(bookId: Int, onBidClicked: (bookId: Int) -> Unit) {
     val viewModel: BookDetailsViewModel = hiltViewModel()

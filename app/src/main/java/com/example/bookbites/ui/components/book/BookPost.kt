@@ -1,6 +1,8 @@
 package com.example.bookbites.ui.components.book
 
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -50,7 +52,11 @@ import androidx.navigation.NavController
 import com.example.bookbites.R
 import com.example.bookbites.ui.viewmodels.BooksViewModel
 import com.example.navigation.Screens
+import com.example.util.option_lists.availabilityOptions
+import com.example.util.option_lists.categoryOptions
+import com.example.util.option_lists.locationOptions
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BookPost(navController: NavController) {
@@ -131,32 +137,6 @@ fun BookPost(navController: NavController) {
             singleLine = true
         )
 
-        val options = listOf(
-            "All",
-            "Horror",
-            "Biography",
-            "History",
-            "Self-Help",
-            "Cookbooks",
-            "Travel",
-            "Business",
-            "Parenting",
-            "Health",
-            "Religion",
-            "Spirituality",
-            "Poetry",
-            "Classics",
-            "Young Adult",
-            "Children's Books",
-            "Science",
-            "Technology",
-            "Art",
-            "Music",
-            "Sports",
-            "Reference",
-            "Comics & Graphic Novels"
-        )
-
         var expanded by remember { mutableStateOf(false) }
         ExposedDropdownMenuBox(
             expanded = expanded,
@@ -182,7 +162,7 @@ fun BookPost(navController: NavController) {
                     expanded = false
                 }
             ) {
-                options.forEach { selectionOption ->
+                categoryOptions.forEach { selectionOption ->
                     DropdownMenuItem(
                         onClick = {
                             category = selectionOption
@@ -195,55 +175,6 @@ fun BookPost(navController: NavController) {
             }
         }
 
-        val locationOptions = listOf(
-            "Baringo",
-            "Bomet",
-            "Bungoma",
-            "Busia",
-            "Elgeyo/Marakwet",
-            "Embu",
-            "Garissa",
-            "Homa Bay",
-            "Isiolo",
-            "Kajiado",
-            "Kakamega",
-            "Kericho",
-            "Kiambu",
-            "Kilifi",
-            "Kirinyaga",
-            "Kisii",
-            "Kisumu",
-            "Kitui",
-            "Kwale",
-            "Laikipia",
-            "Lamu",
-            "Machakos",
-            "Makueni",
-            "Mandera",
-            "Marsabit",
-            "Meru",
-            "Migori",
-            "Mombasa",
-            "Murang'a",
-            "Nairobi",
-            "Nakuru",
-            "Nandi",
-            "Narok",
-            "Nyamira",
-            "Nyandarua",
-            "Nyeri",
-            "Samburu",
-            "Siaya",
-            "Taita/Taveta",
-            "Tana River",
-            "Tharaka-Nithi",
-            "Trans Nzoia",
-            "Turkana",
-            "Uasin Gishu",
-            "Vihiga",
-            "Wajir",
-            "West Pokot"
-        )
 
         var expandedLocation by remember { mutableStateOf(false) }
         ExposedDropdownMenuBox(
@@ -283,7 +214,7 @@ fun BookPost(navController: NavController) {
             }
         }
 
-        val optionsA = listOf("Available", "Unavailable")
+
         var expandedA by remember { mutableStateOf(false) }
         ExposedDropdownMenuBox(
             expanded = expandedA,
@@ -309,7 +240,7 @@ fun BookPost(navController: NavController) {
                     expandedA = false
                 }
             ) {
-                optionsA.forEach { selectionOption ->
+                availabilityOptions.forEach { selectionOption ->
                     DropdownMenuItem(
                         onClick = {
                             isAvailable = selectionOption == "Available"
@@ -361,51 +292,6 @@ fun BookPost(navController: NavController) {
         }
     }
 
-}
-
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun availabilityDropDownMenu(availability: String) {
-    val options = listOf("Available", "Unavailable")
-    var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf("") }
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = it },
-        modifier = Modifier.padding(10.dp).fillMaxWidth(),
-    ) {
-        TextField(
-            readOnly = true,
-            value = selectedOptionText,
-            onValueChange = { },
-            label = { Text("Availability") },
-            leadingIcon = { Icon(Icons.Outlined.EventAvailable, "Book", tint = Color.Red) },
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(
-                    expanded = expanded
-                )
-            },
-            colors = ExposedDropdownMenuDefaults.textFieldColors()
-        )
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = {
-                expanded = false
-            }
-        ) {
-            options.forEach { selectionOption ->
-                DropdownMenuItem(
-                    onClick = {
-                        selectedOptionText = selectionOption
-                        expanded = false
-                    }
-                ) {
-                    Text(text = selectionOption)
-                }
-            }
-        }
-    }
 }
 
 fun isAvailable(selectionOption:String):Boolean{

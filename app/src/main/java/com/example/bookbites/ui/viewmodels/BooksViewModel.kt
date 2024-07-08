@@ -1,24 +1,38 @@
 package com.example.bookbites.ui.viewmodels
 
+import android.content.Context
 import android.net.http.HttpException
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresExtension
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookbites.repository.BookBitesRepo
 import com.example.bookbites.ui.uistates.BookStates
 import com.example.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @HiltViewModel
-class BooksViewModel @Inject constructor(private val bookBitesRepo: BookBitesRepo) : ViewModel() {
+class BooksViewModel @Inject constructor(
+    private val bookBitesRepo: BookBitesRepo,
+    private val savedStateHandle: SavedStateHandle,
+    @ApplicationContext private val context: Context
+) : ViewModel() {
 
     private val _books = MutableStateFlow(BookStates())
     val book = _books.asStateFlow()
@@ -31,6 +45,10 @@ class BooksViewModel @Inject constructor(private val bookBitesRepo: BookBitesRep
 
     init {
         getBooks()
+    }
+
+    companion object{
+        private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("states")
     }
 
     fun postBook(
@@ -131,6 +149,37 @@ class BooksViewModel @Inject constructor(private val bookBitesRepo: BookBitesRep
             _selectedLocationBooks.value =
                 BookStates(error = e.localizedMessage ?: "An unexpected error occurred")
         }
+    }
+
+    private suspend fun saveBooleanToDataStore(key:String,value:Boolean){
+        context.dataStore.edit { preferences ->
+            preferences[booleanPreferencesKey(key)] = value
+        }
+    }
+
+    private suspend fun getBooleanFromDataStore(key: String):Boolean{
+        return context.dataStore.data.first()[booleanPreferencesKey(key)]?:false
+    }
+
+
+    fun saveLikeState(bookId: Int, isLiked: Boolean) {
+        viewModelScope.launch {
+            saveBooleanToDataStore("like_$bookId", isLiked)
+            Log.d("LIKE BUTTTON_SET", "${savedStateHandle.set("like_${bookId.toString()}", isLiked)}")
+        }
+    }
+    fun saveBookmarkState(bookId: Int, isBookmarked: Boolean) {
+        savedStateHandle.set("bookmark_$bookId", isBookmarked)
+    }
+
+    suspend fun getLikeState(bookId: Int): Boolean {
+        val likeState = getBooleanFromDataStore("like_$bookId")
+        Log.d("LIKE BUTTTON_GET", "${likeState.toString()}")
+        return likeState
+    }
+
+    fun getBookmarkState(bookId: Int): Boolean {
+        return savedStateHandle.get<Boolean>("bookmark_$bookId") ?: false
     }
 
 

@@ -1,6 +1,8 @@
 package com.example.bookbites.di
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresExtension
 import com.example.bookbites.api.BookBitesApi
 import com.example.bookbites.network.BookBitesKtorClient
 import com.example.bookbites.repository.BookBitesRepo
@@ -30,6 +32,7 @@ object AppModule {
         return SessionManager(context)
     }
 
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     @Provides
     @Singleton
     fun provideBookBitesRepository(bookBitesApi: BookBitesApi): BookBitesRepo {
