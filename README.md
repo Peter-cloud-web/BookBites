@@ -60,7 +60,7 @@ The app is built on MVVM architecture.
 
 ## Screenshots
 
-<img src="screenshots/1.jpeg" width="250"> <img src="screenshots/2.jpeg" width="250"> <img src="screenshots/3.jpeg" width="250">
+<img src="screenshots/1.jpg" width="250"> <img src="screenshots/2.jpeg" width="250"> <img src="screenshots/3.jpeg" width="250">
 <img src="screenshots/4.jpeg" width="250"> <img src="screenshots/5.jpeg" width="250"> <img src="screenshots/5c.jpeg" width="250">
 <img src="screenshots/6.jpeg" width="250"> <img src="screenshots/6b.jpeg" width="250"> <img src="screenshots/7.jpeg" width="250">
 <img src="screenshots/8.jpeg" width="250"> <img src="screenshots/9.jpeg" width="250"> <img src="screenshots/10.jpeg" width="250">
